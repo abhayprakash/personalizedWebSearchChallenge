@@ -1,0 +1,10 @@
+#packages required for project
+install.packages("SOAR")
+install.packages("MASS")
+install.packages("Hmisc")
+install.packages("Matrix")
+install.packages("tau")
+install.packages("e1071")
+install.packages("gbm")
+install.packages("randomForest")
+install.packages("gmodels")
