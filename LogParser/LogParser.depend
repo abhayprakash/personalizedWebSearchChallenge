@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1385557816 source:c:\users\abhay prakash\codes\logparser\main.cpp
+	"variables.h"
+	<iostream>
+	<stdio.h>
+	<fstream>
+	<sstream>
+
+1385555043 c:\users\abhay prakash\codes\logparser\variables.h
+
