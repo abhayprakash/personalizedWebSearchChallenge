@@ -6,7 +6,13 @@
 #include <sstream>
 #include <vector>
 
+#include <windows.h>
+#include <mysql.h>
+
 using namespace std;
+
+MYSQL mysql;
+MYSQL * conn ;
 
 struct URL_Domain_Pair
 {
@@ -15,6 +21,7 @@ struct URL_Domain_Pair
 
 int main()
 {
+    mysql_init( &mysql ) ;
     //variables in a row
     unsigned int SessionID, Day, USERID;
     char TypeOfRecord;

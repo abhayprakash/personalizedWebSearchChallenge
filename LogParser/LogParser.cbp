@@ -13,13 +13,18 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
+					<Add directory="../../../../Program Files (x86)/MySQL/MySQL Server 5.5/include" />
 				</Compiler>
+				<Linker>
+					<Add library="..\..\..\..\Program Files (x86)\MySQL\MySQL Server 5.5\lib\debug\mysqlclient.lib" />
+				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="../../../../Program Files (x86)/MySQL/MySQL Server 5.5/include/mysql.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="variables.h" />
 		<Extensions>
