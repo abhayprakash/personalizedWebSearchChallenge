@@ -1,0 +1,38 @@
+# depslib dependency file v1.0
+1385694396 source:c:\users\abhay prakash\codes\logparser\main.cpp
+	"variables.h"
+	<iostream>
+	<stdio.h>
+	<fstream>
+	<sstream>
+	<vector>
+	<windows.h>
+	<mysql.h>
+
+1385611712 c:\users\abhay prakash\codes\logparser\variables.h
+
+1342793284 c:\program files (x86)\mysql\mysql server 5.5\include\mysql.h
+	<standards.h>
+	<sys/types.h>
+	<winsock2.h>
+	"mysql_version.h"
+	"mysql_com.h"
+	"mysql_time.h"
+	"my_list.h"
+	"typelib.h"
+	"my_alloc.h"
+
+1342795844 c:\program files (x86)\mysql\mysql server 5.5\include\mysql_version.h
+	<custom_conf.h>
+
+1342793284 c:\program files (x86)\mysql\mysql server 5.5\include\mysql_com.h
+
+1342793284 c:\program files (x86)\mysql\mysql server 5.5\include\mysql_time.h
+
+1342793284 c:\program files (x86)\mysql\mysql server 5.5\include\my_list.h
+
+1342793284 c:\program files (x86)\mysql\mysql server 5.5\include\typelib.h
+	"my_alloc.h"
+
+1342793284 c:\program files (x86)\mysql\mysql server 5.5\include\my_alloc.h
+
