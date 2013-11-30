@@ -11,7 +11,7 @@
 
 using namespace std;
 
-MYSQL mysql;
+MYSQL mysql; // mysql++ library
 MYSQL * conn ;
 
 struct URL_Domain_Pair

@@ -36,3 +36,15 @@
 
 1342793284 c:\program files (x86)\mysql\mysql server 5.5\include\my_alloc.h
 
+1385802460 source:e:\projects\wsdm_personalisedwebsearchchallenge\codes\logparser\main.cpp
+	"variables.h"
+	<iostream>
+	<stdio.h>
+	<fstream>
+	<sstream>
+	<vector>
+	<windows.h>
+	<mysql.h>
+
+1385802460 e:\projects\wsdm_personalisedwebsearchchallenge\codes\logparser\variables.h
+
