@@ -59,7 +59,8 @@ int main()
     ifstream train_fin(SHORT_TRAIN_FILE_PATH);
     string rowInLog, tempForTypeOrTime;
     string listOfTerms, pairOfURLandDomain;
-    bool firstClick;
+    bool clickedAnyURLForThisQuery;
+    bool madeSomeQueryForThisSession;
 
     while(getline(train_fin, rowInLog))
     {
@@ -71,12 +72,15 @@ int main()
             {
                 //alter queryShowedLinks to set grade = 2 acc. to prevSessionID, prevQueryID, prevURLID, prevSERPID
                     //check whether clicked for last query
-                firstLogRow = false;
+
             }
-            prevTimePassed = 0; // no use of initializing in M
+            else
+                firstLogRow = false;
+
             sin >> Day >> USERID;
             sprintf(queryToExecute, "INSERT INTO session VALUES(%d, %d, %d)",SessionID, USERID, Day);
 			mysql_query(connect, queryToExecute);
+            madeSomeQueryForThisSession = false;
             continue;
         }
         stringstream streamTime(tempForTypeOrTime);
@@ -86,6 +90,14 @@ int main()
         //got SessionID, TimePassed, SERPID
         if(tempForTypeOrTime == "Q" || tempForTypeOrTime == "T") // for T, test file has to be opened.
         {
+            if(madeSomeQueryForThisSession)
+            {
+                // alter queryShowedLinks for prev values
+                    //check whether clicked for previous query
+
+            }
+            else
+                madeSomeQueryForThisSession = true;
             sin>>QueryID;
             //insert into query
             //if day <= 24 insert into train_query
@@ -110,23 +122,28 @@ int main()
                 //insert into queryshowedlinks except timespent and grade
             }
             prevTimePassed = TimePassed;
-            firstClick = true;
+            clickedAnyURLForThisQuery = false;
             continue;
         }
         if(tempForTypeOrTime == "C")
         {
-            if(firstClick)
+            if(!clickedAnyURLForThisQuery)
             {
                 int timeForFirstClick = TimePassed - prevTimePassed;
                 //alter query with queryID, sessionID, prevTimePassed to set clickedAnyLink=true, TimeForFirstClick = timeForFirstClick
 
-                firstClick = false;
+                clickedAnyURLForThisQuery = true;
             }
             else
             {
                 int timeOnPreviousLink = TimePassed - prevTimePassed;
+                //alter previous in queryshowedlinks
 
             }
+            prevSessionID = SessionID;
+            prevQueryID = QueryID;
+            prevSERPID = SERPID;
+            prevURLID = URLID;
             prevTimePassed = TimePassed;
             continue;
         }
