@@ -98,7 +98,7 @@ int main()
                 getline(tokenStream, URLID, ',');
                 tokenStream>>DomainID;
                 //insert into URL
-                //insert into
+                //insert into queryshowedlinks except timespent and grade
             }
             continue;
         }
