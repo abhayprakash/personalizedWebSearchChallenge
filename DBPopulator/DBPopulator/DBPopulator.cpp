@@ -46,42 +46,65 @@ int main()
     MYSQL_RES *res_set; /* Create a pointer to recieve the return value.*/
     MYSQL_ROW row;  /* Assign variable for rows. */
 	/***********************Parser********************/
-	unsigned int SessionID, Day, USERID;
-    char TypeOfRecord;
-    unsigned int TimePassed, SERPID, QueryID, URLID, DomainID, TermID;
-    
+	unsigned int SessionID, Day, USERID, TimePassed;
+	unsigned int SERPID, QueryID, URLID;
+	unsigned int DomainID, TermID;
+	char TypeOfRecord;
+
+    unsigned int prevTimePassed;
+    char queryToExecute[256];
+
     ifstream train_fin(SHORT_TRAIN_FILE_PATH);
-    string rowInLog;
-    string temp;
+    string rowInLog, tempForTypeOrTime;
+    string listOfTerms, pairOfURLandDomain;
+
     while(getline(train_fin, rowInLog))
     {
         stringstream sin(rowInLog);
-        sin>>SessionID;
-		sin>>temp;
-        if(temp == "M")
+        sin>>SessionID>>tempForTypeOrTime;
+        if(tempForTypeOrTime == "M")
         {
+            prevTimePassed = 0;
             sin >> Day >> USERID;
-            //Insert in DB acc to 1
-			char queryToExecute[256];
-			sprintf(queryToExecute, "INSERT INTO session VALUES(%d)",);
-			mysql_query(connect, queryToExecute); 
+            sprintf(queryToExecute, "INSERT INTO session VALUES(%d, %d, %d)",SessionID, USERID, Day);
+			mysql_query(connect, queryToExecute);
             continue;
         }
-        else
+        stringstream streamTime(tempForTypeOrTime);
+        streamTime >> TimePassed;
+        sin>>tempForTypeOrTime >> SERPID;
+
+        //got SessionID, TimePassed, SERPID
+        if(tempForTypeOrTime == "Q" || tempForTypeOrTime == "T") // for T, test file has to be opened.
         {
-            stringstream streamTime(temp);
-            streamTime >> TimePassed;
-            sin>>temp >> SERPID;
-            if(temp == "C") // for T, test file has to be opened.
+            sin>>QueryID;
+            //insert into query
+            //if day <= 24 insert into train_query
+            //if day >= 25 and <= 27 insert into validate query
+            //if day >= 28 insert into test query
+            sin>>listOfTerms;
+            istringstream tokenStream(listOfTerms);
+            while(getline(tokenStream, TermID, ','))
             {
-                sin>>URLID;
-                //Insert in DB acc to 3
-            }
-            else
-            {
-               sin>>QueryID;
+                //insert into query_has_terms
 
             }
+
+            for(int rank = 1; rank <= 10; rank++)
+            {
+                sin>>pairOfURLandDomain;
+                tokenStream.clear();
+                tokenStream.str(pairOfURLandDomain);
+                getline(tokenStream, URLID, ',');
+                tokenStream>>DomainID;
+                //insert into URL
+                //insert into
+            }
+            continue;
+        }
+        if(tempForTypeOrTime == "C")
+        {
+            continue;
         }
     }
 
