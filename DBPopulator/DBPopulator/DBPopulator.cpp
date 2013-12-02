@@ -51,12 +51,15 @@ int main()
 	unsigned int DomainID, TermID;
 	char TypeOfRecord;
 
+    bool firstLogRow = true;
+    unsigned int prevSessionID, prevQueryID, prevURLID, prevSERPID;
     unsigned int prevTimePassed;
     char queryToExecute[256];
 
     ifstream train_fin(SHORT_TRAIN_FILE_PATH);
     string rowInLog, tempForTypeOrTime;
     string listOfTerms, pairOfURLandDomain;
+    bool firstClick;
 
     while(getline(train_fin, rowInLog))
     {
@@ -64,7 +67,13 @@ int main()
         sin>>SessionID>>tempForTypeOrTime;
         if(tempForTypeOrTime == "M")
         {
-            prevTimePassed = 0;
+            if(!firstLogRow)
+            {
+                //alter queryShowedLinks to set grade = 2 acc. to prevSessionID, prevQueryID, prevURLID, prevSERPID
+                    //check whether clicked for last query
+                firstLogRow = false;
+            }
+            prevTimePassed = 0; // no use of initializing in M
             sin >> Day >> USERID;
             sprintf(queryToExecute, "INSERT INTO session VALUES(%d, %d, %d)",SessionID, USERID, Day);
 			mysql_query(connect, queryToExecute);
@@ -100,10 +109,25 @@ int main()
                 //insert into URL
                 //insert into queryshowedlinks except timespent and grade
             }
+            prevTimePassed = TimePassed;
+            firstClick = true;
             continue;
         }
         if(tempForTypeOrTime == "C")
         {
+            if(firstClick)
+            {
+                int timeForFirstClick = TimePassed - prevTimePassed;
+                //alter query with queryID, sessionID, prevTimePassed to set clickedAnyLink=true, TimeForFirstClick = timeForFirstClick
+
+                firstClick = false;
+            }
+            else
+            {
+                int timeOnPreviousLink = TimePassed - prevTimePassed;
+
+            }
+            prevTimePassed = TimePassed;
             continue;
         }
     }
