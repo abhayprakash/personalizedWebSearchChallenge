@@ -1,11 +1,22 @@
 #include <stdafx.h>
+#include "variables.h"
+
 #include "my_global.h" // Include this file first to avoid problems
 #include "mysql.h" // MySQL Include File
+
+#include <vector>
+#include <iostream>
+#include <string.h>
+#include <fstream>
+#include <sstream>
+
+using namespace std;
+
 #define SERVER "localhost"
 #define USER "root"
 #define PASSWORD "ap11"
-#define DATABASE "userlog"
- 
+#define DATABASE "short_userlog"
+
 int main()
 {
     MYSQL *connect; // Create a pointer to the MySQL instance
@@ -14,7 +25,8 @@ int main()
     if(!connect)    /* If instance didn't initialize say so and exit with fault.*/
     {
         fprintf(stderr,"MySQL Initialization Failed");
-        return 1;
+        system("pause");
+		return 1;
     }
     /* Now we will actually connect to the specific database.*/
  
@@ -28,9 +40,53 @@ int main()
     }
     else{
         printf("Connection Failed!\n");
+		system("pause");
+		return 0;
     }
     MYSQL_RES *res_set; /* Create a pointer to recieve the return value.*/
     MYSQL_ROW row;  /* Assign variable for rows. */
+	/***********************Parser********************/
+	unsigned int SessionID, Day, USERID;
+    char TypeOfRecord;
+    unsigned int TimePassed, SERPID, QueryID, URLID, DomainID, TermID;
+    
+    ifstream train_fin(SHORT_TRAIN_FILE_PATH);
+    string rowInLog;
+    string temp;
+    while(getline(train_fin, rowInLog))
+    {
+        stringstream sin(rowInLog);
+        sin>>SessionID;
+		sin>>temp;
+        if(temp == "M")
+        {
+            sin >> Day >> USERID;
+            //Insert in DB acc to 1
+			char queryToExecute[256];
+			sprintf(queryToExecute, "INSERT INTO session VALUES(%d)",);
+			mysql_query(connect, queryToExecute); 
+            continue;
+        }
+        else
+        {
+            stringstream streamTime(temp);
+            streamTime >> TimePassed;
+            sin>>temp >> SERPID;
+            if(temp == "C") // for T, test file has to be opened.
+            {
+                sin>>URLID;
+                //Insert in DB acc to 3
+            }
+            else
+            {
+               sin>>QueryID;
+
+            }
+        }
+    }
+
+    train_fin.close();
+	/*************************************************/
     mysql_query(connect,"SELECT * FROM query");
     /* Send a query to the database. */
     unsigned int i = 0; /* Create a counter for the rows */
