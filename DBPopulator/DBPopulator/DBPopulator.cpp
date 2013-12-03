@@ -72,10 +72,13 @@ int main()
             {
                 //alter queryShowedLinks to set grade = 2 acc. to prevSessionID, prevQueryID, prevURLID, prevSERPID
                     //check whether clicked for last query
-
+                if(clickedAnyURLForThisQuery)
+                {
+                    sprintf(queryToExecute, "UPDATE queryshowedlinks SET Grade=2 WHERE pk_queryshowedlinks=%d,%d,%d,%d",prevSessionID, prevQueryID, prevURLID, prevSERPID);
+                    mysql_query(connect, queryToExecute);
+                }
             }
-            else
-                firstLogRow = false;
+            firstLogRow = false;
 
             sin >> Day >> USERID;
             sprintf(queryToExecute, "INSERT INTO session VALUES(%d, %d, %d)",SessionID, USERID, Day);
@@ -94,21 +97,50 @@ int main()
             {
                 // alter queryShowedLinks for prev values
                     //check whether clicked for previous query
-
+                int timeSpentOnLastLink = TimePassed - prevTimePassed;
+                int grade = 0;
+                if(timeSpentOnLastLink >= 50)
+                    grade = 1;
+                if(timeSpentOnLastLink >= 400)
+                    grade = 2;
+                if(clickedAnyURLForThisQuery)
+                {
+                    sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE pk_queryshowedlinks=%d,%d,%d,%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
+                    mysql_query(connect, queryToExecute);
+                }
             }
             else
                 madeSomeQueryForThisSession = true;
+
             sin>>QueryID;
             //insert into query
+            sprintf(queryToExecute, "INSERT INTO query('QueryID','SessionID','QueryMadeAtTime') VALUES(%d, %d, %d)",QueryID, SessionID, TimePassed);
+			mysql_query(connect, queryToExecute);
             //if day <= 24 insert into train_query
+            if(Day <= 24)
+            {
+                sprintf(queryToExecute, "INSERT INTO train_query VALUES(%d, %d)", SessionID, QueryID);
+                mysql_query(connect, queryToExecute);
+            }
             //if day >= 25 and <= 27 insert into validate query
+            else if(Day <= 27)
+            {
+                sprintf(queryToExecute, "INSERT INTO validate_query VALUES(%d, %d)", SessionID, QueryID);
+                mysql_query(connect, queryToExecute);
+            }
             //if day >= 28 insert into test query
+            else
+            {
+                sprintf(queryToExecute, "INSERT INTO test_query VALUES(%d, %d)", SessionID, QueryID);
+                mysql_query(connect, queryToExecute);
+            }
             sin>>listOfTerms;
             istringstream tokenStream(listOfTerms);
             while(getline(tokenStream, TermID, ','))
             {
                 //insert into query_has_terms
-
+                sprintf(queryToExecute, "INSERT INTO queryhasterms VALUES(%d, %d)", QueryID, TermID);
+                mysql_query(connect, queryToExecute);
             }
 
             for(int rank = 1; rank <= 10; rank++)
