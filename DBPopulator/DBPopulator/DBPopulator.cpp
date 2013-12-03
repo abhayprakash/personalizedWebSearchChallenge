@@ -75,7 +75,7 @@ int main()
                     //check whether clicked for last query
                 if(clickedAnyURLForThisQuery)
                 {
-                    sprintf(queryToExecute, "UPDATE queryshowedlinks SET Grade=2 WHERE pk_queryshowedlinks=%d,%d,%d,%d",prevSessionID, prevQueryID, prevURLID, prevSERPID);
+                    sprintf(queryToExecute, "UPDATE queryshowedlinks SET Grade=2 WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d",prevSessionID, prevQueryID, prevURLID, prevSERPID);
                     mysql_query(connect, queryToExecute);
                 }
             }
@@ -107,7 +107,7 @@ int main()
                     grade = 2;
                 if(clickedAnyURLForThisQuery)
                 {
-                    sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE pk_queryshowedlinks=%d,%d,%d,%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
+                    sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
                     mysql_query(connect, queryToExecute);
                 }
             }
@@ -180,7 +180,7 @@ int main()
         {
             sin>>URLID;
             //update queryshowedlinks set wasClicked = 1
-            sprintf(queryToExecute, "UPDATE queryshowedlinks SET WasClicked=1 WHERE pk_queryshowedlinks=%d,%d,%d,%d", SessionID,QueryID,URLID,SERPID);
+            sprintf(queryToExecute, "UPDATE queryshowedlinks SET WasClicked=1 WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d", SessionID,QueryID,URLID,SERPID);
             mysql_query(connect, queryToExecute);
 
             if(!clickedAnyURLForThisQuery)//i.e it is the first click
@@ -202,7 +202,7 @@ int main()
                     grade = 2;
 
                 //alter previous in queryshowedlinks
-                sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE pk_queryshowedlinks=%d,%d,%d,%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
+                sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
                 mysql_query(connect, queryToExecute);
             }
             prevSessionID = SessionID;
