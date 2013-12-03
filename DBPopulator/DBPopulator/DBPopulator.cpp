@@ -82,7 +82,8 @@ int main()
             firstLogRow = false;
 
             sin >> Day >> USERID;
-            sprintf(queryToExecute, "INSERT INTO session VALUES(%d, %d, %d)",SessionID, USERID, Day);
+			/**checked**/
+            sprintf(queryToExecute, "INSERT INTO sessions VALUES(%d, %d, %d)",SessionID, USERID, Day);
 			mysql_query(connect, queryToExecute);
             madeSomeQueryForThisSession = false;
             continue;
@@ -115,23 +116,27 @@ int main()
 
             sin>>QueryID;
             //insert into query
-            sprintf(queryToExecute, "INSERT INTO query('QueryID','SessionID','QueryMadeAtTime') VALUES(%d, %d, %d)",QueryID, SessionID, TimePassed);
+			/**checked**/
+            sprintf(queryToExecute, "INSERT INTO query(QueryID,SessionID,QueryMadeAtTime) VALUES(%d, %d, %d)",QueryID, SessionID, TimePassed);
 			mysql_query(connect, queryToExecute);
             //if day <= 24 insert into train_query
             if(Day <= 24)
             {
+				/**checked**/
                 sprintf(queryToExecute, "INSERT INTO train_query VALUES(%d, %d)", SessionID, QueryID);
                 mysql_query(connect, queryToExecute);
             }
             //if day >= 25 and <= 27 insert into validate query
             else if(Day <= 27)
             {
+				/**checked**/
                 sprintf(queryToExecute, "INSERT INTO validate_query VALUES(%d, %d)", SessionID, QueryID);
                 mysql_query(connect, queryToExecute);
             }
             //if day >= 28 insert into test query
             else
             {
+				/**checked**/
                 sprintf(queryToExecute, "INSERT INTO test_query VALUES(%d, %d)", SessionID, QueryID);
                 mysql_query(connect, queryToExecute);
             }
@@ -142,6 +147,7 @@ int main()
             {
                 TermID = atoi(s_termID.c_str());//could have kept this variable as string - as currently used only in query, but for genericity kept as int and used conversion
                 //insert into query_has_terms
+				/**checked**/
                 sprintf(queryToExecute, "INSERT INTO queryhasterms VALUES(%d, %d)", QueryID, TermID);
                 mysql_query(connect, queryToExecute);
             }
@@ -157,11 +163,13 @@ int main()
                 tokenStream>>DomainID;
 
                 //insert into URL
+				/**checked**/
                 sprintf(queryToExecute, "INSERT INTO url VALUES(%d, %d)", URLID, DomainID);
                 mysql_query(connect, queryToExecute);
 
                 //insert into queryshowedlinks except timespent, WasClicked and grade
-                sprintf(queryToExecute, "INSERT INTO queryshowedlinks('SessionID','QueryID','URLID','SERPID','DisplayRank') VALUES(%d,%d,%d,%d,%d)", SessionID, QueryID, URLID, SERPID, rank);
+				/**checked**/
+                sprintf(queryToExecute, "INSERT INTO queryshowedlinks(SessionID,QueryID,URLID,SERPID,DisplayRank) VALUES(%d,%d,%d,%d,%d)", SessionID, QueryID, URLID, SERPID, rank);
                 mysql_query(connect, queryToExecute);
             }
             prevTimePassed = TimePassed;
