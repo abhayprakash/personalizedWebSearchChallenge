@@ -1,3 +1,4 @@
+-- written by Abhay Prakash
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -46,10 +47,13 @@ CREATE TABLE IF NOT EXISTS `query` (
   `QueryID` int(11) NOT NULL,
   `SessionID` int(11) NOT NULL,
   `QueryMadeAtTime` int(11) NOT NULL,
+  ClickedAnyLink tinyint( 1 ) DEFAULT  0,
+  TimeForFirstClick int(11) DEFAULT NULL,
   PRIMARY KEY (`QueryID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE INDEX index_query_SessionID ON query(SessionID);
+CREATE INDEX index_query_queryTime ON query(QueryMadeAtTime);
 
 -- --------------------------------------------------------
 
@@ -62,9 +66,10 @@ CREATE TABLE IF NOT EXISTS `queryshowedlinks` (
   `QueryID` int(11) NOT NULL,
   `URLID` int(11) NOT NULL,
   `SERPID` int(11) NOT NULL,
-  `DisplayRank` int(11) NOT NULL,
-  `TimeSpent` int(11) NOT NULL,
-  `Grade` tinyint(4) NOT NULL,
+  `DisplayRank` int(11),
+  WasClicked tinyint(1) DEFAULT 0,
+  `TimeSpent` int(11) DEFAULT NULL,
+  `Grade` tinyint(4) DEFAULT 0,
   CONSTRAINT pk_queryshowedlinks PRIMARY KEY (SessionID, QueryID, URLID, SERPID)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
