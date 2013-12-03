@@ -75,6 +75,7 @@ int main()
                     //check whether clicked for last query
                 if(clickedAnyURLForThisQuery)
                 {
+					/**checked**/
                     sprintf(queryToExecute, "UPDATE queryshowedlinks SET Grade=2 WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d",prevSessionID, prevQueryID, prevURLID, prevSERPID);
                     mysql_query(connect, queryToExecute);
                 }
@@ -107,6 +108,7 @@ int main()
                     grade = 2;
                 if(clickedAnyURLForThisQuery)
                 {
+					/**checked**/
                     sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
                     mysql_query(connect, queryToExecute);
                 }
@@ -180,6 +182,7 @@ int main()
         {
             sin>>URLID;
             //update queryshowedlinks set wasClicked = 1
+			/**checked**/
             sprintf(queryToExecute, "UPDATE queryshowedlinks SET WasClicked=1 WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d", SessionID,QueryID,URLID,SERPID);
             mysql_query(connect, queryToExecute);
 
@@ -187,6 +190,7 @@ int main()
             {
                 int timeForFirstClick = TimePassed - prevTimePassed;
                 //alter query with queryID, sessionID, prevTimePassed to set clickedAnyLink=true, TimeForFirstClick = timeForFirstClick
+				/**checked**/
                 sprintf(queryToExecute, "UPDATE query SET ClickedAnyLink=1,TimeForFirstClick=%d WHERE QueryID=%d AND SessionID=%d AND QueryMadeAtTime=%d",timeForFirstClick,QueryID,SessionID,prevTimePassed);
                 mysql_query(connect, queryToExecute);
 
@@ -202,6 +206,7 @@ int main()
                     grade = 2;
 
                 //alter previous in queryshowedlinks
+				/**checked**/
                 sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
                 mysql_query(connect, queryToExecute);
             }
