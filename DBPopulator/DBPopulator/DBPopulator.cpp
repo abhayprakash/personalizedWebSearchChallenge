@@ -9,6 +9,7 @@
 #include <string.h>
 #include <fstream>
 #include <sstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -43,8 +44,8 @@ int main()
 		system("pause");
 		return 0;
     }
-    MYSQL_RES *res_set; /* Create a pointer to recieve the return value.*/
-    MYSQL_ROW row;  /* Assign variable for rows. */
+    //MYSQL_RES *res_set; /* Create a pointer to recieve the return value.*/
+    //MYSQL_ROW row;  /* Assign variable for rows. */
 	/***********************Parser********************/
 	unsigned int SessionID, Day, USERID, TimePassed;
 	unsigned int SERPID, QueryID, URLID;
@@ -136,8 +137,10 @@ int main()
             }
             sin>>listOfTerms;
             istringstream tokenStream(listOfTerms);
-            while(getline(tokenStream, TermID, ','))
+            string s_termID;
+            while(getline(tokenStream, s_termID, ','))
             {
+                TermID = atoi(s_termID.c_str());//could have kept this variable as string - as currently used only in query, but for genericity kept as int and used conversion
                 //insert into query_has_terms
                 sprintf(queryToExecute, "INSERT INTO queryhasterms VALUES(%d, %d)", QueryID, TermID);
                 mysql_query(connect, queryToExecute);
@@ -148,7 +151,9 @@ int main()
                 sin>>pairOfURLandDomain;
                 tokenStream.clear();
                 tokenStream.str(pairOfURLandDomain);
-                getline(tokenStream, URLID, ',');
+                string s_URLID;
+                getline(tokenStream, s_URLID, ',');
+                URLID = atoi(s_URLID.c_str());
                 tokenStream>>DomainID;
 
                 //insert into URL
@@ -202,22 +207,23 @@ int main()
     }
 
     train_fin.close();
-	/*************************************************/
-    mysql_query(connect,"SELECT * FROM query");
-    /* Send a query to the database. */
-    unsigned int i = 0; /* Create a counter for the rows */
-
-    res_set = mysql_store_result(connect); /* Receive the result and store it in res_set */
-
-    unsigned int numrows = mysql_num_rows(res_set); /* Create the count to print all rows */
-
-    /* This while is to print all rows and not just the first row found, */
-
-    while ((row = mysql_fetch_row(res_set)) != NULL){
-        printf("%s\n",row[i] != NULL ?
-        row[i] : "NULL"); /* Print the row data */
-    }
-    mysql_close(connect);   /* Close and shutdown */
+	mysql_close(connect);   /* Close and shutdown */
 	system("pause");
     return 0;
 }
+/***************EXAMPLE****************************
+    mysql_query(connect,"SELECT * FROM query");
+    // Send a query to the database.
+    unsigned int i = 0; // Create a counter for the rows
+
+    res_set = mysql_store_result(connect); // Receive the result and store it in res_set
+
+    unsigned int numrows = mysql_num_rows(res_set); // Create the count to print all rows
+
+    // This while is to print all rows and not just the first row found,
+
+    while ((row = mysql_fetch_row(res_set)) != NULL){
+        printf("%s\n",row[i] != NULL ?
+        row[i] : "NULL"); // Print the row data
+    }
+***************************************************/
