@@ -150,8 +150,14 @@ int main()
                 tokenStream.str(pairOfURLandDomain);
                 getline(tokenStream, URLID, ',');
                 tokenStream>>DomainID;
+
                 //insert into URL
-                //insert into queryshowedlinks except timespent and grade
+                sprintf(queryToExecute, "INSERT INTO url VALUES(%d, %d)", URLID, DomainID);
+                mysql_query(connect, queryToExecute);
+
+                //insert into queryshowedlinks except timespent, WasClicked and grade
+                sprintf(queryToExecute, "INSERT INTO queryshowedlinks('SessionID','QueryID','URLID','SERPID','DisplayRank') VALUES(%d,%d,%d,%d,%d)", SessionID, QueryID, URLID, SERPID, rank);
+                mysql_query(connect, queryToExecute);
             }
             prevTimePassed = TimePassed;
             clickedAnyURLForThisQuery = false;
@@ -159,18 +165,32 @@ int main()
         }
         if(tempForTypeOrTime == "C")
         {
-            if(!clickedAnyURLForThisQuery)
+            sin>>URLID;
+            //update queryshowedlinks set wasClicked = 1
+            sprintf(queryToExecute, "UPDATE queryshowedlinks SET WasClicked=1 WHERE pk_queryshowedlinks=%d,%d,%d,%d", SessionID,QueryID,URLID,SERPID);
+            mysql_query(connect, queryToExecute);
+
+            if(!clickedAnyURLForThisQuery)//i.e it is the first click
             {
                 int timeForFirstClick = TimePassed - prevTimePassed;
                 //alter query with queryID, sessionID, prevTimePassed to set clickedAnyLink=true, TimeForFirstClick = timeForFirstClick
+                sprintf(queryToExecute, "UPDATE query SET ClickedAnyLink=1,TimeForFirstClick=%d WHERE QueryID=%d AND SessionID=%d AND QueryMadeAtTime=%d",timeForFirstClick,QueryID,SessionID,prevTimePassed);
+                mysql_query(connect, queryToExecute);
 
                 clickedAnyURLForThisQuery = true;
             }
             else
             {
-                int timeOnPreviousLink = TimePassed - prevTimePassed;
-                //alter previous in queryshowedlinks
+                int timeSpentOnLastLink = TimePassed - prevTimePassed;
+                int grade = 0;
+                if(timeSpentOnLastLink >= 50)
+                    grade = 1;
+                if(timeSpentOnLastLink >= 400)
+                    grade = 2;
 
+                //alter previous in queryshowedlinks
+                sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE pk_queryshowedlinks=%d,%d,%d,%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
+                mysql_query(connect, queryToExecute);
             }
             prevSessionID = SessionID;
             prevQueryID = QueryID;
