@@ -1,3 +1,10 @@
+/**
+Author : Abhay Prakash
+email : abhay.prakash1@gmail.com
+
+Desc: Code to parse the user log. Made a single one to parse any of the train or test file.
+Reads the given file and puts the data in the connected database.
+**/
 #include <stdafx.h>
 #include "variables.h"
 
