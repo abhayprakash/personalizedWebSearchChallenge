@@ -24,24 +24,20 @@ using namespace std;
 #define USER "root"
 #define PASSWORD "ap11"
 #define DATABASE "short_userlog"
+#define SIZE 17*1024*1024
 
 int main()
 {
-    MYSQL *connect; // Create a pointer to the MySQL instance
-    connect=mysql_init(NULL); // Initialise the instance
-    /* This If is irrelevant and you don't need to show it. I kept it in for Fault Testing.*/
-    if(!connect)    /* If instance didn't initialize say so and exit with fault.*/
+    MYSQL *connect;
+    connect=mysql_init(NULL);
+    if(!connect)
     {
         fprintf(stderr,"MySQL Initialization Failed");
         system("pause");
 		return 1;
     }
-    /* Now we will actually connect to the specific database.*/
 
     connect=mysql_real_connect(connect,SERVER,USER,PASSWORD,DATABASE,0,NULL,0);
-    /* Following if statements are unneeded too, but it's worth it to show on your
-    first app, so that if your database is empty or the query didn't return anything it
-    will at least let you know that the connection to the mysql server was established. */
 
     if(connect){
         printf("Connection Succeeded\n");
@@ -64,12 +60,17 @@ int main()
     unsigned int prevTimePassed;
     char queryToExecute[256];
 
-    ifstream train_fin(SHORT_TRAIN_FILE_PATH);
+    //ifstream train_fin(SHORT_TRAIN_FILE_PATH);
     string rowInLog, tempForTypeOrTime;
     string listOfTerms, pairOfURLandDomain;
     bool clickedAnyURLForThisQuery;
     bool madeSomeQueryForThisSession;
 
+    char buff[SIZE];
+    FILE* fp = fopen(SHORT_TRAIN_FILE_PATH, "rb");
+
+    fread(buff, 1, SIZE, fp);
+    stringstream train_fin(buff);
     while(getline(train_fin, rowInLog))
     {
         stringstream sin(rowInLog);
