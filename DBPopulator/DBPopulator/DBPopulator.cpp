@@ -23,8 +23,8 @@ using namespace std;
 #define SERVER "localhost"
 #define USER "root"
 #define PASSWORD "ap11"
-#define DATABASE "short_userlog"
-#define SIZE 17*1024*1024
+#define DATABASE "new_userlog"
+#define SIZE_BUFF 17*1024*1024*1024
 
 int main()
 {
@@ -66,10 +66,10 @@ int main()
     bool clickedAnyURLForThisQuery;
     bool madeSomeQueryForThisSession;
 
-    char buff[SIZE];
-    FILE* fp = fopen(SHORT_TRAIN_FILE_PATH, "rb");
+    char buff[SIZE_BUFF];
+    FILE* fp = fopen(TRAIN_FILE_PATH, "rb");
 
-    fread(buff, 1, SIZE, fp);
+    fread(buff, 1, SIZE_BUFF, fp);
     stringstream train_fin(buff);
     while(getline(train_fin, rowInLog))
     {
@@ -227,7 +227,7 @@ int main()
         }
     }
 
-    train_fin.close();
+    fclose(fp);
 	mysql_close(connect);   /* Close and shutdown */
 	system("pause");
     return 0;
