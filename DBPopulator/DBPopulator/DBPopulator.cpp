@@ -12,6 +12,7 @@ Reads the given file and puts the data in the connected database.
 #include "mysql.h" // MySQL Include File
 
 #include <vector>
+#include <map>
 #include <iostream>
 #include <string.h>
 #include <fstream>
@@ -24,7 +25,6 @@ using namespace std;
 #define USER "root"
 #define PASSWORD "ap11"
 #define DATABASE "new_userlog"
-//#define SIZE_BUFF 17*1024*1024*1024
 
 int main()
 {
@@ -60,19 +60,18 @@ int main()
     unsigned int prevTimePassed;
     char queryToExecute[256];
 
-    //ifstream train_fin(TRAIN_FILE_PATH);
+    //ifstream train_fin(SHORT_TRAIN_FILE_PATH);
     string rowInLog, tempForTypeOrTime;
     string listOfTerms, pairOfURLandDomain;
     bool clickedAnyURLForThisQuery;
     bool madeSomeQueryForThisSession;
-
-    FILE* fp = fopen(TRAIN_FILE_PATH, "rb");
+    map<int, bool> userHasPreviousQueriesBeforeThisQuery;
 
     fseek(fp, 0, SEEK_END);
 	long fsize = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 
-	char *buff = malloc(fsize + 1);
+	char *buff = (char*)malloc(fsize + 1);
 	fread(buff, fsize, 1, fp);
 	fclose(fp);
 	buff[fsize] = 0;
@@ -114,14 +113,14 @@ int main()
             {
                 // alter queryShowedLinks for prev values
                     //check whether clicked for previous query
-                int timeSpentOnLastLink = TimePassed - prevTimePassed;
-                int grade = 0;
-                if(timeSpentOnLastLink >= 50)
-                    grade = 1;
-                if(timeSpentOnLastLink >= 400)
-                    grade = 2;
                 if(clickedAnyURLForThisQuery)
                 {
+                    int timeSpentOnLastLink = TimePassed - prevTimePassed;
+                    int grade = 0;
+                    if(timeSpentOnLastLink >= 50)
+                        grade = 1;
+                    if(timeSpentOnLastLink >= 400)
+                        grade = 2;
 					/**checked**/
                     sprintf(queryToExecute, "UPDATE queryshowedlinks SET TimeSpent=%d,Grade=%d WHERE SessionID=%d AND QueryID=%d AND URLID=%d AND SERPID=%d",timeSpentOnLastLink,grade,prevSessionID, prevQueryID, prevURLID, prevSERPID);
                     mysql_query(connect, queryToExecute);
@@ -135,27 +134,33 @@ int main()
 			/**checked**/
             sprintf(queryToExecute, "INSERT INTO query(QueryID,SessionID,QueryMadeAtTime) VALUES(%d, %d, %d)",QueryID, SessionID, TimePassed);
 			mysql_query(connect, queryToExecute);
-            //if day <= 24 insert into train_query
-            if(Day <= 24)
+
+            //if day >= 25 and <= 27 insert into validate query
+            if(Day >= 25 && Day <= 27)
             {
-				/**checked**/
+                if(userHasPreviousQueriesBeforeThisQuery[USERID])
+                {
+                    /**checked**/
+                    sprintf(queryToExecute, "INSERT INTO validate_query VALUES(%d, %d)", SessionID, QueryID);
+                    mysql_query(connect, queryToExecute);
+                }
+            }
+
+            //Put all with 'Q' in train query
+            if(tempForTypeOrTime == "Q")
+            {
+                userHasPreviousQueriesBeforeThisQuery[USERID] = true;
+                /**checked**/
                 sprintf(queryToExecute, "INSERT INTO train_query VALUES(%d, %d)", SessionID, QueryID);
                 mysql_query(connect, queryToExecute);
             }
-            //if day >= 25 and <= 27 insert into validate query
-            else if(Day <= 27)
+            else // 'T'
             {
 				/**checked**/
-                sprintf(queryToExecute, "INSERT INTO validate_query VALUES(%d, %d)", SessionID, QueryID);
+				sprintf(queryToExecute, "INSERT INTO test_query VALUES(%d, %d)", SessionID, QueryID);
                 mysql_query(connect, queryToExecute);
             }
-            //if day >= 28 insert into test query
-            else
-            {
-				/**checked**/
-                sprintf(queryToExecute, "INSERT INTO test_query VALUES(%d, %d)", SessionID, QueryID);
-                mysql_query(connect, queryToExecute);
-            }
+
             sin>>listOfTerms;
             istringstream tokenStream(listOfTerms);
             string s_termID;
@@ -233,9 +238,7 @@ int main()
         }
     }
 
-    //fclose(fp);
-	//train_fin.close();
-	mysql_close(connect);   /* Close and shutdown */
+    mysql_close(connect);   /* Close and shutdown */
 	system("pause");
     return 0;
 }
