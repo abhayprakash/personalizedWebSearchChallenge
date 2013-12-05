@@ -24,7 +24,7 @@ using namespace std;
 #define USER "root"
 #define PASSWORD "ap11"
 #define DATABASE "new_userlog"
-#define SIZE_BUFF 17*1024*1024*1024
+//#define SIZE_BUFF 17*1024*1024*1024
 
 int main()
 {
@@ -60,18 +60,24 @@ int main()
     unsigned int prevTimePassed;
     char queryToExecute[256];
 
-    //ifstream train_fin(SHORT_TRAIN_FILE_PATH);
+    //ifstream train_fin(TRAIN_FILE_PATH);
     string rowInLog, tempForTypeOrTime;
     string listOfTerms, pairOfURLandDomain;
     bool clickedAnyURLForThisQuery;
     bool madeSomeQueryForThisSession;
 
-    char buff[SIZE_BUFF];
     FILE* fp = fopen(TRAIN_FILE_PATH, "rb");
 
-    fread(buff, 1, SIZE_BUFF, fp);
-    stringstream train_fin(buff);
-    while(getline(train_fin, rowInLog))
+    fseek(fp, 0, SEEK_END);
+	long fsize = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+
+	char *buff = malloc(fsize + 1);
+	fread(buff, fsize, 1, fp);
+	fclose(fp);
+	buff[fsize] = 0;
+	stringstream train_fin(buff);
+	while(getline(train_fin, rowInLog))
     {
         stringstream sin(rowInLog);
         sin>>SessionID>>tempForTypeOrTime;
@@ -227,7 +233,8 @@ int main()
         }
     }
 
-    fclose(fp);
+    //fclose(fp);
+	//train_fin.close();
 	mysql_close(connect);   /* Close and shutdown */
 	system("pause");
     return 0;
