@@ -60,13 +60,13 @@ int main()
     unsigned int prevTimePassed;
     char queryToExecute[256];
 
-    //ifstream train_fin(SHORT_TRAIN_FILE_PATH);
     string rowInLog, tempForTypeOrTime;
     string listOfTerms, pairOfURLandDomain;
     bool clickedAnyURLForThisQuery;
     bool madeSomeQueryForThisSession;
     map<int, bool> userHasPreviousQueriesBeforeThisQuery;
 
+	FILE* fp = fopen(TEST_FILE_PATH,"rb");
     fseek(fp, 0, SEEK_END);
 	long fsize = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
