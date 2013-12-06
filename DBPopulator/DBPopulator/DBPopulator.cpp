@@ -57,7 +57,7 @@ int main()
 
     bool firstLogRow = true;
     unsigned int prevSessionID, prevQueryID, prevURLID, prevSERPID;
-    unsigned int prevTimePassed;
+    unsigned int prevTimePassed;		
     char queryToExecute[256];
 
     string rowInLog, tempForTypeOrTime;
@@ -66,18 +66,29 @@ int main()
     bool madeSomeQueryForThisSession;
     map<int, bool> userHasPreviousQueriesBeforeThisQuery;
 
-	FILE* fp = fopen(TEST_FILE_PATH,"rb");
-    fseek(fp, 0, SEEK_END);
-	long fsize = ftell(fp);
-	fseek(fp, 0, SEEK_SET);
-
-	char *buff = (char*)malloc(fsize + 1);
-	fread(buff, fsize, 1, fp);
+	const int buffSize = 50*1024*1024;
+	FILE* fp = fopen(TRAIN_FILE_PATH,"rb");
+	
+    //fseek(fp, 0, SEEK_END);
+	//long fsize = ftell(fp);
+	//fseek(fp, 0, SEEK_SET);
+	
+	char *buff = (char*)malloc(buffSize + 1);
+	if(fread(buff, buffSize, 1, fp))
+		printf("Read Success\n");
+	else
+		printf("Read 0 bytes\n");
 	fclose(fp);
-	buff[fsize] = 0;
+	buff[buffSize] = 0;
 	stringstream train_fin(buff);
+
+	//ifstream train_fin(TEST_FILE_PATH);
+	int loopnum = 0;
 	while(getline(train_fin, rowInLog))
     {
+		if(loopnum == 500)
+			break;
+		loopnum++;
         stringstream sin(rowInLog);
         sin>>SessionID>>tempForTypeOrTime;
         if(tempForTypeOrTime == "M")
