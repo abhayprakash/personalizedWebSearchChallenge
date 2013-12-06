@@ -242,19 +242,3 @@ int main()
 	system("pause");
     return 0;
 }
-/***************EXAMPLE****************************
-    mysql_query(connect,"SELECT * FROM query");
-    // Send a query to the database.
-    unsigned int i = 0; // Create a counter for the rows
-
-    res_set = mysql_store_result(connect); // Receive the result and store it in res_set
-
-    unsigned int numrows = mysql_num_rows(res_set); // Create the count to print all rows
-
-    // This while is to print all rows and not just the first row found,
-
-    while ((row = mysql_fetch_row(res_set)) != NULL){
-        printf("%s\n",row[i] != NULL ?
-        row[i] : "NULL"); // Print the row data
-    }
-***************************************************/
