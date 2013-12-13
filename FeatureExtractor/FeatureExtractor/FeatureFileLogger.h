@@ -24,7 +24,7 @@ struct feature{
 };
 
 class FeatureFile{
-	int user_id, query_id, url_id, url_position;
+	int user_id, query_id, url_id, url_position, max_rel_of_this_url_for_this_user;
 	feature url_sameSession, url_beforeSession, query_sameSession, query_beforeSession; // these will be replaced to similarity instead of exact
 	int resultGrade;
 	
@@ -35,7 +35,7 @@ class FeatureFile{
 
 public:
 	FeatureFile();	
-	void logRecord(int uid, int qid, int urlid, int urlpos, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r);
+	void logRecord(int uid, int qid, int urlid, int urlpos, int max_rel, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r);
 	void flushToFile();
 };
 
