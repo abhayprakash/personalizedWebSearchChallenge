@@ -4,16 +4,18 @@
 #include <cstdlib>
 #include <vector>
 #include <map>
+#include "variables.h"
+#include "FeatureFileLogger.h"
 
 using namespace std;
 /*
 Files required:
 1.
 user_id, query_id, url_id, url_position,
-url_displayed_in_same_session(bool), time_difference_from_most_recent_display, clicked(bool), grade_that_time(0/1/2),
-url_displayed_before_current_session(bool), day_difference_from_most_recent, clicked(bool), grade_that_time,
-similar_query_in_same_session(bool), time_diff_from_most_recent, this_url_shown(bool), grade_that_time,
-similar_query_before_current_session(bool), day_difference_from_most_recent, this_url_shown(bool), grade_that_time,
+{url_displayed_in_same_session(bool), time_difference_from_most_recent_display, clicked(bool), grade_that_time(0/1/2)},
+{url_displayed_before_current_session(bool), day_difference_from_most_recent, clicked(bool), grade_that_time},
+{similar_query_in_same_session(bool), time_diff_from_most_recent, this_url_shown(bool), grade_that_time},
+{similar_query_before_current_session(bool), day_difference_from_most_recent, this_url_shown(bool), grade_that_time},
 grade_this_time
 
 2.
@@ -28,6 +30,7 @@ domain_id, url_id
 5.
 serp_id, url_id
 */
+
 struct rowToPrint{
     int user_id;
     int session_id;
