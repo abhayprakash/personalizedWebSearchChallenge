@@ -35,5 +35,7 @@ class FeatureFileLogger{
 public:
 	FeatureFileLogger();	
 	void logRecord(int uid, int qid, int urlid, int urlpos, int max_rel, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r);
+	void wrapUp();
+	~FeatureFileLogger();
 };
 

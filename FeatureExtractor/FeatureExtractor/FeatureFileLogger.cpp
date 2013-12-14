@@ -39,3 +39,14 @@ void FeatureFileLogger::flushToFile()
 	memset(buffer, 0, sizeOfBuffer);
 	bytesUsedInBuffer = 0;
 }
+
+void FeatureFileLogger::wrapUp()
+{
+	fclose(fp);
+	free(buffer);
+}
+
+FeatureFileLogger::~FeatureFileLogger()
+{
+	wrapUp();
+}

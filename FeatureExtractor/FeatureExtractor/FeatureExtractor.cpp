@@ -33,12 +33,14 @@ map<int, vector<int> > queryTerms;
 map<int, vector<int> > domainURLs;
 map<int, vector<int> > serpURLs;
 
-// DS for getting url data for particular user
+// DS for getting url data for particular user before session
 class usr_url{
 	struct rec{
 		int max_grade, latest_grade, last_day; 
 	};
 	rec temp;
+
+	FILE* fp;
 
 public:
 	map<int, map<int, rec> > table_usr_url; // public: for the case i want to use it directly
@@ -81,9 +83,21 @@ public:
 	{
 		return table_usr_url[uid][urlid].last_day;
 	}
+	
+	// call at end
+	void flushLastData()
+	{
+		fp = fopen(URL_USR_DATA_FILE,"w");
+		char* buffer = (char *)malloc(); 
+		fclose(fp);
+	}
+
+	void wrapUp()
+	{
+	}
 };
 
-// DS for getting similar(for now SAME) query for particular user
+// DS for getting similar query for particular user before session
 class usr_query{
 	struct rec{
 		int max_grade, latest_grade, last_day;
@@ -141,25 +155,77 @@ public:
 		int recent_similar_query = getRecentSimilarQuery(qid);
 		return table_usr_qry[uid][recent_similar_query].last_day;
 	}
+
+	void flushLastData()
+	{
+		//To implement
+	}
+
+	void wrapUp()
+	{
+	}
 };
 
-struct clickedURL{
-	int url_id, timeOfClick;
+// this collects data and orders by default - provide table populated as public so as to be used by Processor
+class DataCollector{
+	FILE* fp;
+
+	struct shownURL{
+		int url_id, timeOfClick, grade;
+	};
+	shownURL tempURL;
+
+	struct queryRec{
+		int qid, timeOfQuery;
+		vector<shownURL> clickedURL;
+	};
+	queryRec tempQuery;
+	
+	struct sessionRec{
+		int uid, session_id; // session_id not to be output in any file
+		vector<queryRec> queries;
+	};
+	sessionRec tempSession;
+
+public:
+	vector<sessionRec> RecordOfDay[31];
+
+	DataCollector()
+	{
+		fp = fopen(TRAIN_FILE, "r");
+	}
+
+	void parseFile()
+	{
+
+	}
 };
 
-struct session{
-	int usr_id;
-	vector<int> queries;
-
+// iterates over the collection by DataCollector seqentially to {fill, use the two DSs and put data in FeatureFileLogger}
+class Processor{
+public:
+	void its_main()
+	{
+	}
 };
 
-class Parser{
-	 
-};
+int main()
+{
+	usr_url storeRoom_usr_url;
+	usr_query storeRoom_usr_query;
 
-class ProcessMemory{
+	DataCollector dc;
+	dc.parseFile();
 
-};
+	Processor p;
+	P.its_main();
+
+	storeRoom_usr_url.flushLastData();
+	storeRoom_usr_url.wrapUp();
+
+	storeRoom_usr_query.flushLastData();
+	storeRoom_usr_query.wrapUp();
+}
 
 struct rowToPrint{
     int user_id;

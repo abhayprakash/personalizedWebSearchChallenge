@@ -3,8 +3,9 @@
 
 char TRAIN_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\small_train_dataset";
 char FEATURE_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\feature.txt";
+char URL_USR_DATA_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\usr_url_data.txt"; // required in test phase for before session feature
 
-#define BUFF_SIZE_FEATURE_FILE 10*1024*1024*1024ull
+#define BUFF_SIZE_FEATURE_FILE 10*1024*1024*1024ull //10 GB
 
 #define NUM_MAX_ROW_CHAR 150
 #define NUM_MAX_WORD_CHAR 15
