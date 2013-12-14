@@ -8,5 +8,6 @@ char FEATURE_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Dat
 
 #define NUM_MAX_ROW_CHAR 150
 #define NUM_MAX_WORD_CHAR 15
+#define SIMILAR_INDEX_THRESH_FOR_QUERY 100
 
 #endif // VARIABLES_H_INCLUDED
