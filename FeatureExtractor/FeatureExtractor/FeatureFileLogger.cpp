@@ -35,6 +35,7 @@ void FeatureFileLogger::logRecord(int uid, int qid, int urlid, int urlpos, int m
 
 void FeatureFileLogger::flushToFile()
 {
+	printf("flushing feature train file\n");
 	fwrite(buffer, bytesUsedInBuffer, 1, fp);
 	memset(buffer, 0, sizeOfBuffer);
 	bytesUsedInBuffer = 0;
@@ -44,6 +45,7 @@ void FeatureFileLogger::wrapUp()
 {
 	fclose(fp);
 	free(buffer);
+	printf("feature train file generation : Complete\n");
 }
 
 FeatureFileLogger::~FeatureFileLogger()

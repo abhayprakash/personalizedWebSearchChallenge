@@ -4,6 +4,9 @@
 class serpURL_Logger
 {
 	FILE* fp;
+	char *buffer;
+	const unsigned long long sizeOfBuffer = BUFF_SIZE_SU_FILE;
+	unsigned long long bytesUsedInBuffer;
 	void flush();
 public:
 	serpURL_Logger();

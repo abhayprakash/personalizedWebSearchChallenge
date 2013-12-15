@@ -31,132 +31,6 @@ serp_id, url_id // iterate over map serpURLs to print all it
 // Global query -> {term}
 map<int, vector<int> > queryTerms;
 
-// DS for getting url data for particular user before session
-class usr_url{
-	struct rec{
-		int max_grade, latest_grade, last_day; 
-	};
-	rec temp;
-
-	FILE* fp;
-
-public:
-	map<int, map<int, rec> > table_usr_url; // public: for the case i want to use it directly
-
-	void update(int uid, int urlid, int mg, int lg, int ld)
-	{
-		temp.max_grade = mg;
-		temp.latest_grade = lg;
-		temp.last_day = ld;
-
-		table_usr_url[uid][urlid] = temp;
-	}
-
-	void updateDayGrade(int uid, int urlid, int day, int grade)
-	{
-		if(table_usr_url.find(uid) == table_usr_url.end() || table_usr_url[uid].find(urlid) == table_usr_url[uid].end())
-		{
-			update(uid, urlid, grade, grade, day);
-			return;
-		}
-		table_usr_url[uid][urlid].max_grade = max(table_usr_url[uid][urlid].max_grade, grade);
-		if(table_usr_url[uid][urlid].last_day < day)
-		{
-			table_usr_url[uid][urlid].last_day = day;
-			table_usr_url[uid][urlid].latest_grade = grade;
-		}
-	}
-
-	bool exists(int uid, int urlid)
-	{
-		if(table_usr_url.find(uid) == table_usr_url.end() || table_usr_url[uid].find(urlid) == table_usr_url[uid].end())
-			return false;
-		return true;
-	}
-
-	int getMaxGrade(int uid, int urlid)
-	{
-		return table_usr_url[uid][urlid].max_grade;
-	}
-
-	int getLatestGrade(int uid, int urlid)
-	{
-		return table_usr_url[uid][urlid].latest_grade;
-	}
-
-	int getLastDay(int uid, int urlid)
-	{
-		return table_usr_url[uid][urlid].last_day;
-	}
-};
-
-// DS for getting similar query for particular user before session
-class usr_query{
-	struct rec{
-		int max_grade, latest_grade, last_day;
-	};
-	rec temp;
-
-	int getRecentSimilarQuery(int qid)
-	{
-		if(SIMILAR_INDEX_THRESH_FOR_QUERY == 100)
-			return qid;
-		// to implement below
-
-	}
-public:
-	map<int, map<int, rec> > table_usr_qry; // public: for the case i want to use it directly
-	
-	void update(int uid, int qid, int mg, int lg, int ld)
-	{
-		temp.max_grade = mg;
-		temp.latest_grade = lg;
-		temp.last_day = ld;
-
-		table_usr_qry[uid][qid] = temp;
-	}
-
-	void updateDayGrade(int uid, int qid, int day, int grade)
-	{
-		if(table_usr_qry.find(uid) == table_usr_qry.end() || table_usr_qry[uid].find(qid) == table_usr_qry[uid].end())
-		{
-			update(uid, qid, grade, grade, day);
-			return;
-		}
-		table_usr_qry[uid][qid].max_grade = max(table_usr_qry[uid][qid].max_grade, grade);
-		if(table_usr_qry[uid][qid].last_day < day)
-		{
-			table_usr_qry[uid][qid].last_day = day;
-			table_usr_qry[uid][qid].latest_grade = grade;
-		}
-	}
-
-	bool exists(int uid, int qid)
-	{
-		if(table_usr_qry.find(uid) == table_usr_qry.end() || table_usr_qry[uid].find(qid) == table_usr_qry[uid].end())
-			return false;
-		return true;
-	}
-
-	int getMaxGrade_forSimilar(int uid, int qid)
-	{
-		int recent_similar_query = getRecentSimilarQuery(qid);
-		return table_usr_qry[uid][recent_similar_query].max_grade;
-	}
-
-	int getLatestGrade_forSimilar(int uid, int qid)
-	{
-		int recent_similar_query = getRecentSimilarQuery(qid);
-		return table_usr_qry[uid][recent_similar_query].latest_grade;
-	}
-
-	int getLastDay_forSimilar(int uid, int qid)
-	{
-		int recent_similar_query = getRecentSimilarQuery(qid);
-		return table_usr_qry[uid][recent_similar_query].last_day;
-	}
-};
-
 // this collects data and orders by default - provide table populated as public so as to be used by Processor
 class DataCollector{
 	FILE* fp;
@@ -181,9 +55,9 @@ class DataCollector{
 public:
 	vector<sessionRec> RecordOfDay[31];
 
-	DataCollector()
+	DataCollector(char* path)
 	{
-		fp = fopen(TRAIN_FILE, "r");
+		fp = fopen(path, "r");
 	}
 
 	void parseFile()

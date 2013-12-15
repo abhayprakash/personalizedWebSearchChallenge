@@ -1,31 +1,37 @@
 #include "stdafx.h"
-#include "serpURL_Logger.h"
+#include "queryTerm_Logger.h"
 #include <cstring>
 #include <cstdlib>
 
-void serpURL_Logger::flush()
+void queryTerm_Logger::flush()
 {
-	printf("flushing SU file\n");
+	printf("flushing QT file\n");
 	fwrite(buffer, bytesUsedInBuffer, 1, fp);
 	memset(buffer, 0, sizeOfBuffer);
 	bytesUsedInBuffer = 0;
 }
 
-serpURL_Logger::serpURL_Logger()
+queryTerm_Logger::queryTerm_Logger()
 {
-	fp = fopen(SERP_URL_FILE, "w");
+	fp = fopen(QUERY_TERM_FILE, "w");
 	buffer = (char *)malloc(sizeOfBuffer);
 	memset(buffer, 0, sizeOfBuffer);
 		
 	bytesUsedInBuffer = 0;
 }
 
-void serpURL_Logger::log(int sid, int urlid)
+void queryTerm_Logger::logAll(map<int, vector<int> > &queryTerms)
+{
+	// TO DO: implement - iteate and call log(...) aptly
+
+}
+
+void queryTerm_Logger::log(int qid, int termid)
 {
 	char rowInLog[NUM_MAX_ROW_CHAR];
 	memset(rowInLog, 0, NUM_MAX_ROW_CHAR);
 	//prepare rowInLog
-	sprintf(rowInLog, "%d,%d\n", sid, urlid);
+	sprintf(rowInLog, "%d,%d\n", qid, termid);
 		
 	int bytesInRow = strlen(rowInLog);
 	if(bytesInRow + bytesUsedInBuffer <= sizeOfBuffer)
@@ -41,14 +47,14 @@ void serpURL_Logger::log(int sid, int urlid)
 	}
 }
 
-void serpURL_Logger::wrapUp()
+void queryTerm_Logger::wrapUp()
 {
 	fclose(fp);
 	free(buffer);
-	printf("SU file generation : Complete\n");
+	printf("QT file generation : Complete\n");
 }
 
-serpURL_Logger::~serpURL_Logger()
+queryTerm_Logger::~queryTerm_Logger()
 {
 	wrapUp();
 }
