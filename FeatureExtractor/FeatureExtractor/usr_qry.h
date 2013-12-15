@@ -1,6 +1,7 @@
 #pragma once
 #include "variables.h"
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -11,14 +12,5 @@ using namespace std;
 
 // DS for getting similar query for particular user before session
 class usr_qry{
-	int getRecentSimilarQuery(int qid);
-public:
-	map<int, int> ; // public: for the case i want to use it directly
 	
-	void update(int uid, int qid, int mg, int lg, int ld);
-	void updateDayGrade(int uid, int qid, int day, int grade);
-	bool exists(int uid, int qid);
-	int getMaxGrade_forSimilar(int uid, int qid);
-	int getLatestGrade_forSimilar(int uid, int qid);
-	int getLastDay_forSimilar(int uid, int qid);
 };

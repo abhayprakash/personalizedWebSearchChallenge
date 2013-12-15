@@ -22,8 +22,12 @@ queryTerm_Logger::queryTerm_Logger()
 
 void queryTerm_Logger::logAll(map<int, vector<int> > &queryTerms)
 {
-	// TO DO: implement - iteate and call log(...) aptly
-
+	map<int, vector<int> >::iterator it;
+	for(it = queryTerms.begin(); it!=queryTerms.end(); it++)
+	{
+		for(int i = 0; i < it->second.size(); i++)
+			log(it->first, it->second[i]);
+	}
 }
 
 void queryTerm_Logger::log(int qid, int termid)

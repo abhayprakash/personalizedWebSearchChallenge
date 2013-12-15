@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "urs_url.h"
+#include "usr_url.h"
 
 void usr_url::updateShown(int uid, int urlid, int day)
 {
 	if(table.find(uid) == table.end() || table[uid].find(urlid) == table[uid].end())
 	{
-		rec temp;
+		rec_url temp;
 		table[uid][urlid] = temp;
 	}
 	table[uid][urlid].count_shown++;

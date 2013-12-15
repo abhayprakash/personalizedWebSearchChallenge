@@ -1,13 +1,12 @@
 #pragma once
 #include <map>
-
 using namespace std;
 
 // DS for getting url data for particular user before session
 class usr_url{
-	struct rec{
+	struct rec_url{
 		int count_shown, count_r[3], latest_grade, last_day; 
-		rec()
+		rec_url()
 		{
 			count_shown = 0; 
 			count_r[2] = 0; count_r[1] = 0; count_r[0] = 0;
@@ -15,11 +14,8 @@ class usr_url{
 			last_day = 0;
 		}
 	};
-
-	FILE* fp;
-
 public:
-	map<int, map<int, rec> > table; // public: for the case i want to use it directly
+	map<int, map<int, rec_url> > table;
 
 	void updateShown(int uid, int urlid, int day);
 	void updateClick(int uid, int urlid, int grade);

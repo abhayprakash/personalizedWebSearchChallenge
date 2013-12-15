@@ -15,9 +15,13 @@ struct feature{
 	int time_diff; // treat as day_diff for the case of before session
 	int grade;
 
+	bool u_exists_for_q; // use for q_ss and q_bs only
+	
 	feature(){
+		exists = false;
 		time_diff = 0;
 		grade = 0;
+		u_exists_for_q = false;
 	}
 };
 
@@ -33,8 +37,9 @@ class FeatureFileLogger{
 
 	void flushToFile();
 public:
-	FeatureFileLogger();	
+	FeatureFileLogger(char* path);	
 	void logRecord(int uid, int qid, int urlid, int count_earlier_shown, int count_earlier_2, int count_earlier_1, int count_earlier_0, int urlpos, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r);
+	void logTest(int uid, int qid, int urlid, int count_earlier_shown, int count_earlier_2, int count_earlier_1, int count_earlier_0, int urlpos, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs);
 	void wrapUp();
 	~FeatureFileLogger();
 };
