@@ -11,7 +11,7 @@ using namespace std;
 /*
 Files required:
 1.
-user_id, query_id, url_id, url_position, max_rel_of_this_url_for_this_user,
+user_id, query_id, url_id,count_earlier_shown,count_earlier_2,count_earlier_1,count_earlier_0,url_position,
 {url_displayed_in_same_session(bool), time_difference_from_most_recent_display, grade_that_time(0/1/2)},
 {url_displayed_before_current_session(bool), day_difference_from_most_recent, grade_that_time},
 {similar_query_in_same_session(bool), time_diff_from_most_recent, this_url_shown(bool), grade_that_time},
@@ -30,39 +30,86 @@ serp_id, url_id // iterate over map serpURLs to print all it
 
 // Global query -> {term}
 map<int, vector<int> > queryTerms;
-
+int g_serpid = 0;
+			
 // this collects data and orders by default - provide table populated as public so as to be used by Processor
 class DataCollector{
 	FILE* fp;
+	char *buffer;
+	unsigned long long buffSize;
 
 	struct shownURL{
-		int url_id, timeOfClick, grade;
+		int url_id, timeOfClick, position;
 	};
-	shownURL tempURL;
-
 	struct queryRec{
 		int qid, timeOfQuery;
 		vector<shownURL> clickedURL;
 	};
-	queryRec tempQuery;
-	
 	struct sessionRec{
 		int uid, session_id; // session_id not to be output in any file
 		vector<queryRec> queries;
 	};
+	
+	shownURL tempURL;
+	queryRec tempQuery;
 	sessionRec tempSession;
-
 public:
 	vector<sessionRec> RecordOfDay[31];
 
-	DataCollector(char* path)
+	DataCollector(char* path) // phase I : provide path to train file, phase II : provide path to test file
 	{
 		fp = fopen(path, "r");
+		buffSize = BUFF_SIZE_INPUT_READ;
+		buffer = (char *)malloc(buffSize);
 	}
 
 	void parseFile()
 	{
+		int nRead;
+		while((nRead = fread(buffer, 1, buffSize, fp)) > 0)
+		{
+			printf("Read a chunk of file\n");
+			if(nRead == buffSize)
+			{
+				int movedBack = 0;
+				while(buffer[nRead-1] != '\n')
+				{
+					nRead--;
+					movedBack++;
+				}
+				fseek(fp, -movedBack, SEEK_CUR);
+			}
+			buffer[nRead] = 0;
+			// do operation on buffer
+			istringstream buff_in(buffer);
+			string rowInLog;
+			
+			//temp
+			int temp_sid, temp_day, temp_time, temp_uid, temp_serp, temp_qid, temp_term, temp_url, temp_domain;
+			string temp_typeOrTime;
+			
+			while(getline(buff_in, rowInLog))
+			{
+				istringstream sin(rowInLog);
+				sin>>temp_sid>>temp_typeOrTime;
+				if(temp_typeOrTime == "M")
+				{
+					sin>>temp_day>>temp_uid;
+					// sid, day, uid
+					continue;
+				}
+				temp_time = atoi(temp_typeOrTime.c_str());
+				sin>>temp_typeOrTime;
+				if(temp_typeOrTime == "Q"
+			}
+		}
+	}
 
+	void wrapUp()
+	{
+		fclose(fp);
+		free(buffer);
+		printf("data populated\n");
 	}
 };
 
@@ -92,75 +139,13 @@ int main()
 	storeRoom_usr_query.wrapUp();
 }
 
-struct rowToPrint{
-    int user_id;
-    int session_id;
-    int query_id;
-    int query_day;
-    int num_of_query_in_current_session;
-    int num_of_clicked_result_for_this_query;
-    vector<int> clicked_ranks_in_click_order;
-    int num_of_relevant_2_click;
-    int num_of_relevant_1_click;
-    int num_of_irrelevant_click;
-    int num_of_unique_query_term;
-    int num_of_unique_domain;
-    int time_of_action;
-    int last_action_time;
-    rowToPrint()
-    {
-        num_of_query_in_current_session = 0;
-        num_of_clicked_result_for_this_query = 0;
-        num_of_relevant_2_click = 0;
-        num_of_relevant_1_click = 0;
-        num_of_irrelevant_click = 0;
-        num_of_unique_query_term = 0;
-        num_of_unique_domain = 0;
-        time_of_action = 0;
-        last_action_time = 0;
-    }
-};
-
 int main()
 {
-    //FILE* fp_in = fopen("verySmall", "r");
-    FILE* fp_in = fopen("small_train_dataset", "r");
-
-    fseek(fp_in, 0, SEEK_END);
-	long fsize = ftell(fp_in);
-	fseek(fp_in, 0, SEEK_SET);
-
-    char* buff = (char *)malloc(fsize + 1);
-    fread(buff, fsize, 1, fp_in);
-    buff[fsize] = 0;
-    fclose(fp_in);
-
     stringstream train_fin(buff);
-
-    FILE* fp_sessions = fopen("sessions.txt", "w");
-    FILE* fp_queries = fopen("queries.txt", "w");
-    FILE* fp_click = fopen("clicks_in_order.txt", "w");
-
-    #define MAXROW 1000
-    rowToPrint* outRow = new rowToPrint[MAXROW];
-
-    bool firstLogRow = true;
-    unsigned int prevTimePassed;
-    bool clickedAnyURLForThisQuery;
-    bool madeSomeQueryForThisSession;
-
-    int row_i = -1;
-    string rowInLog, tempForTypeOrTime, SERPID;
-    string listOfTerms, pairOfURLandDomain;
-    int URLID, DomainID;
-    map<int, int> url_rank;
-    int tempSess;
-    while(getline(train_fin, rowInLog))
+	
+	while(getline(train_fin, rowInLog))
     {
-        if(row_i == 1000)
-            break;
-        //cout<<"HERE1\n";
-		stringstream sin(rowInLog);
+        stringstream sin(rowInLog);
         sin>>tempSess>>tempForTypeOrTime;
         if(tempForTypeOrTime == "M")
         {

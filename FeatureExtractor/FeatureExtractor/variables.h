@@ -13,6 +13,7 @@ char SERP_URL_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Da
 char QUERY_TERM_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\QT_file.txt";
 
 // memory allocation
+#define BUFF_SIZE_INPUT_READ 4*1024*1024*1024ull			// 4 GB
 #define BUFF_SIZE_FEATURE_FILE 5*1024*1024*1024ull			// 5 GB
 #define BUFF_SIZE_FEATURE_TEST_FILE 1*1024*1024*1024ull		// 1 GB
 #define BUFF_SIZE_DU_FILE 1*1024*1024*1024ull				// 1 GB

@@ -12,12 +12,12 @@ FeatureFileLogger::FeatureFileLogger(void)
 	bytesUsedInBuffer = 0;
 }
 	
-void FeatureFileLogger::logRecord(int uid, int qid, int urlid, int urlpos, int max_rel, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r)
+void FeatureFileLogger::logRecord(int uid, int qid, int urlid, int count_earlier_shown, int count_earlier_2, int count_earlier_1, int count_earlier_0, int urlpos, int max_rel, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r)
 {
 	char rowInLog[NUM_MAX_ROW_CHAR];
 	memset(rowInLog, 0, NUM_MAX_ROW_CHAR);
 	//prepare rowInLog
-	sprintf(rowInLog, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", uid, qid, urlid, urlpos, max_rel, u_ss.exists, u_ss.time_diff, u_ss.grade, u_bs.exists, u_bs.time_diff, u_bs.grade, q_ss.exists, q_ss.time_diff, q_ss.grade, q_bs.exists, q_bs.time_diff, q_bs.grade, r);
+	sprintf(rowInLog, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", uid, qid, urlid, count_earlier_shown, count_earlier_2, count_earlier_1, count_earlier_0, urlpos, u_ss.exists, u_ss.time_diff, u_ss.grade, u_bs.exists, u_bs.time_diff, u_bs.grade, q_ss.exists, q_ss.time_diff, q_ss.grade, q_bs.exists, q_bs.time_diff, q_bs.grade, r);
 		
 	int bytesInRow = strlen(rowInLog);
 	if(bytesInRow + bytesUsedInBuffer <= sizeOfBuffer)
