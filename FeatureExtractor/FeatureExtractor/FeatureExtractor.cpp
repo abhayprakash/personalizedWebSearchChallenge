@@ -69,6 +69,13 @@ public:
 		}
 	}
 
+	bool exists(int uid, int urlid)
+	{
+		if(table_usr_url.find(uid) == table_usr_url.end() || table_usr_url[uid].find(urlid) == table_usr_url[uid].end())
+			return false;
+		return true;
+	}
+
 	int getMaxGrade(int uid, int urlid)
 	{
 		return table_usr_url[uid][urlid].max_grade;
@@ -82,18 +89,6 @@ public:
 	int getLastDay(int uid, int urlid)
 	{
 		return table_usr_url[uid][urlid].last_day;
-	}
-	
-	// call at end
-	void flushLastData()
-	{
-		fp = fopen(URL_USR_DATA_FILE,"w");
-		char* buffer = (char *)malloc(); 
-		fclose(fp);
-	}
-
-	void wrapUp()
-	{
 	}
 };
 
@@ -138,6 +133,13 @@ public:
 		}
 	}
 
+	bool exists(int uid, int qid)
+	{
+		if(table_usr_qry.find(uid) == table_usr_qry.end() || table_usr_qry[uid].find(qid) == table_usr_qry[uid].end())
+			return false;
+		return true;
+	}
+
 	int getMaxGrade_forSimilar(int uid, int qid)
 	{
 		int recent_similar_query = getRecentSimilarQuery(qid);
@@ -154,15 +156,6 @@ public:
 	{
 		int recent_similar_query = getRecentSimilarQuery(qid);
 		return table_usr_qry[uid][recent_similar_query].last_day;
-	}
-
-	void flushLastData()
-	{
-		//To implement
-	}
-
-	void wrapUp()
-	{
 	}
 };
 
@@ -217,7 +210,7 @@ int main()
 	DataCollector dc;
 	dc.parseFile();
 
-	Processor p;
+	Processor P;
 	P.its_main();
 
 	storeRoom_usr_url.flushLastData();
