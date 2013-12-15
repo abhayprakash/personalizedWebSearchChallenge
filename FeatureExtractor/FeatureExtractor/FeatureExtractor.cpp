@@ -30,8 +30,6 @@ serp_id, url_id // iterate over map serpURLs to print all it
 
 // Global query -> {term}
 map<int, vector<int> > queryTerms;
-map<int, vector<int> > domainURLs;
-map<int, vector<int> > serpURLs;
 
 // DS for getting url data for particular user before session
 class usr_url{
