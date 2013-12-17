@@ -36,13 +36,12 @@ int main()
 	usr_qry store_usrQry;
 	Processor P;
 	
-	dc.parseFile(TRAIN_FILE);
-	P.processTrain(dc_train, store_usrURL, store_usrQry);
+	dc.parse(PARSE_TEST_FILE);
+	dc.parse(PARSE_TRAIN_FILE);
+	P.processTrain(dc, store_usrURL, store_usrQry);
+	P.processTest(dc,store_usrURL, store_usrQry);
 	dc.wrapUp();
-	dc.parseFile(TEST_FILE);
-	dc_test.parseFile();
-	P.processTest(dc_test, store_usrURL, store_usrQry);
-	
+
 	queryTerm_Logger qt_Logger;
-	qt_Logger.logAll();
+	qt_Logger.logAll(queryTerms);
 }

@@ -32,14 +32,17 @@ class FeatureFileLogger{
 	
 	FILE* fp;
 	char *buffer;
-	const unsigned long long sizeOfBuffer = BUFF_SIZE_FEATURE_FILE;
+	unsigned long long sizeOfBuffer;
 	unsigned long long bytesUsedInBuffer;
 
 	void flushToFile();
 public:
-	FeatureFileLogger(char* path);	
-	void logRecord(int uid, int qid, int urlid, int count_earlier_shown, int count_earlier_2, int count_earlier_1, int count_earlier_0, int urlpos, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r);
+	FeatureFileLogger(char* path, int test_or_train);	
+	void logTrain(int uid, int qid, int urlid, int count_earlier_shown, int count_earlier_2, int count_earlier_1, int count_earlier_0, int urlpos, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs, int r);
 	void logTest(int uid, int qid, int urlid, int count_earlier_shown, int count_earlier_2, int count_earlier_1, int count_earlier_0, int urlpos, feature &u_ss, feature &u_bs, feature &q_ss, feature &q_bs);
+	void logMap(); // to implement
+	void logValidate(); // to implement
+	void logVR(); // to implement
 	void wrapUp();
 	~FeatureFileLogger();
 };
