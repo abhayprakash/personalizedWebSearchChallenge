@@ -1,16 +1,26 @@
 #pragma once
 #include <vector>
+#include <map>
 #include "DomainURL_Logger.h"
 #include "serpURL_Logger.h"
 
 using namespace std;
 
 int g_serpid = 0;
+map<int, bool> usersInTest;
 map<int, vector<int> > queryTerms; 
+map<int, vector<int> > serpURLs;
+struct daySession{
+	int day, session_id;
+	daySession(int x, int y)
+	{
+		day = x; session_id = y;
+	}
+};
+map<int, vector<daySession> > userDaySessions; // use it as userDaySessions[user_id][i].{day|session}
 
 // this collects data and orders by default - provide table populated as public so as to be used by Processor
 class DataCollector{
-	FILE* fp;
 	char *buffer;
 	unsigned long long buffSize;
 	DomainURL_Logger duLogger;
@@ -21,20 +31,19 @@ class DataCollector{
 		int url_id, timeOfClick, position;
 	};
 	struct queryRec{
-		int qid, timeOfQuery;
+		int qid, timeOfQuery, shownSERP;
 		vector<shownURL> clickedURL;
 	};
-	struct sessionRec{
-		int uid, session_id; 
+	struct sessMetaData{
+		int uid; 
 		vector<queryRec> queries;
 	};
 
-	shownURL tempURL;
-	queryRec tempQuery;
-	sessionRec tempSession;
+	typedef map<int, sessMetaData> sessionRec; // first int is session_id
+
 public:
-	vector<sessionRec> RecordOfDay[31];
+	sessionRec RecordOfDay[31]; // use it as RecordOfDay[day][session_id].{uid|queries[i].{qid|timeOfQuery|clickedURL[i].{urlid|timeOfClick|position}}}
 	DataCollector(); 
-	void parseFile(char *path);
+	void parse(int test_1_train_0);
 	void wrapUp();
 };
