@@ -77,7 +77,7 @@ void DataCollector::parse(int test_1_train_0)
 			temp_time = atoi(temp_typeOrTime.c_str());
 			sin>>temp_typeOrTime;
 			
-			if(temp_typeOrTime == "Q")
+			if(temp_typeOrTime == "Q" || temp_typeOrTime == "T") // way of identifing T queries: last query of each session with day 28|29|30
 			{
 				sin>>temp_serp>>temp_qid;
 				//temp_sid temp_time temp_serp temp_qid
