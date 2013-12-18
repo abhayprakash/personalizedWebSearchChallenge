@@ -1,6 +1,7 @@
 #pragma once
 #include "FeatureFileLogger.h"
 #include "DataCollector.h"
+#include "global_memory.h"
 #include "usr_url.h"
 #include "usr_qry.h"
 

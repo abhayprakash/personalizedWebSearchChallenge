@@ -1,7 +1,5 @@
 #include "stdafx.h"
 #include "DataCollector.h"
-#include "variables.h"
-#include <sstream>
 
 DataCollector::DataCollector() // phase I : provide path to train file, phase II : provide path to test file
 {

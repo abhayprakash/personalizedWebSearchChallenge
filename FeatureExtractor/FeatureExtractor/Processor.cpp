@@ -6,8 +6,11 @@ void Processor::processTrain(DataCollector &dc, usr_url &store_usrURL, usr_qry &
 {
 	FeatureFileLogger logger_feature_train(FEATURE_FILE, CALL_FROM_PROCESS_TEST);
 	// use logger_feature_train.logTrain() here
-
-	logger_feature_train.wrapUp();
+	for(int i_day = 1; i_day <= 27; i_day++)
+	{
+		// use it as RecordOfDay[day][session_id].{uid|queries[i].{qid|timeOfQuery|clickedURL[i].{urlid|timeOfClick|position}}}
+		dc.RecordOfDay[i_day]
+	}
 }
 
 void Processor::processTest(DataCollector &dc, usr_url &store_usrURL, usr_qry &store_usrQry)
@@ -24,8 +27,4 @@ void Processor::processTest(DataCollector &dc, usr_url &store_usrURL, usr_qry &s
 	FeatureFileLogger logger_validate_result(RESULT_VALIDATE_FILE, CALL_FROM_PROCESS_TEST);
 	// use logger_validate_result.logVR() for this
 
-	logger_validate_result.wrapUp();
-	logger_feature_validate.wrapUp();
-	logger_resultMapper.wrapUp();
-	logger_feature_test.wrapUp();
 }

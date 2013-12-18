@@ -38,8 +38,8 @@ int main()
 	
 	dc.parse(PARSE_TEST_FILE);
 	dc.parse(PARSE_TRAIN_FILE);
-	P.processTrain(dc, store_usrURL, store_usrQry);
-	P.processTest(dc,store_usrURL, store_usrQry);
+	P.processTrain(store_usrURL, store_usrQry);
+	P.processTest(store_usrURL, store_usrQry);
 	dc.wrapUp();
 
 	queryTerm_Logger qt_Logger;
