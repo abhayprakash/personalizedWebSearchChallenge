@@ -15,6 +15,7 @@ using namespace std;
 class usr_qry{
 	typedef map<int, int> map_urlGrade; // url -> grade // all 10 urls so at shown time make it -1
 	struct q_rec{
+		list<int>::iterator pointerToQID;
 		int last_time_day;
 		map_urlGrade urlLastGrade; 
 	};
@@ -41,5 +42,5 @@ public:
 	void updateClicked_local(int uid, int qid, int urlid, int grade);
 
 	void copyLocalToGlobal_and_ClearLocal(int day);
-	bool getRecentSimilarQueryData(int session_or_day, int uid, int actual_qid, int &time_or_day, bool &URLshown, int &grade_that_time); // it will return the data for nearest qid qualifying similarity criteria with true, false if doesn't exist
+	bool getRecentSimilarQueryData(int session_or_day, int uid, int actual_qid, int urlid, int &time_or_day, bool &URLshown, int &grade_that_time); // it will return the data for nearest qid qualifying similarity criteria with true, false if doesn't exist
 };

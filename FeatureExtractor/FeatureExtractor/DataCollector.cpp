@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DataCollector.h"
+#include "global.h"
 
 DataCollector::DataCollector() // phase I : provide path to train file, phase II : provide path to test file
 {
@@ -67,7 +68,7 @@ void DataCollector::parse(int test_1_train_0)
 				}
 				if(considerUser)
 				{
-					userDaySessions[temp_uid].push_back(daySession(temp_day, temp_sid));
+					//userDaySessions[temp_uid].push_back(daySession(temp_day, temp_sid));
 					RecordOfDay[temp_day][temp_sid].uid = temp_uid;
 				}
 				continue;

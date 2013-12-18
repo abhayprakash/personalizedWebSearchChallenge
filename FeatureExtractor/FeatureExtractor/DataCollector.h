@@ -1,5 +1,4 @@
 #pragma once
-#include "global.h"
 #include "variables.h"
 #include "DomainURL_Logger.h"
 #include "serpURL_Logger.h"

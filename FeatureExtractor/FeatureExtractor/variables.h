@@ -38,7 +38,7 @@ char RESULT_MAPPER_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChalleng
 #define SEARCH_BEFORE_SESSION 5
 
 // Computation parameters
-#define SIMILAR_INDEX_THRESH_FOR_QUERY 70
+#define SIMILAR_INDEX_THRESH_FOR_QUERY 0.75
 #define UNCLICKED_CLASS -1 // make one submission with this value = 0 also
 
 #endif // VARIABLES_H_INCLUDED
