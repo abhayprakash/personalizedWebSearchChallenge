@@ -2,59 +2,52 @@
 #include "usr_qry.h"
 
 
-int usr_qry::getRecentSimilarQuery(int qid)
+void usr_qry::updateShown_userQueries(int uid, int qid, int urlid, int day)
 {
-	if(SIMILAR_INDEX_THRESH_FOR_QUERY == 100)
-		return qid;
-	// to implement below
-
-}
-	
-void usr_qry::update(int uid, int qid, int mg, int lg, int ld)
-{
-	temp.max_grade = mg;
-	temp.latest_grade = lg;
-	temp.last_day = ld;
-
-	table_usr_qry[uid][qid] = temp;
-}
-
-void usr_qry::updateDayGrade(int uid, int qid, int day, int grade)
-{
-	if(table_usr_qry.find(uid) == table_usr_qry.end() || table_usr_qry[uid].find(qid) == table_usr_qry[uid].end())
+	list<int>::iterator it;
+	for(it = user_queries[uid].queries.begin(); it!= user_queries[uid].queries.end(); ++it)
 	{
-		update(uid, qid, grade, grade, day);
-		return;
+		if(*it == qid)
+			break;
 	}
-	table_usr_qry[uid][qid].max_grade = max(table_usr_qry[uid][qid].max_grade, grade);
-	if(table_usr_qry[uid][qid].last_day < day)
+
+	if(it == user_queries[uid].queries.end()) // no entry for it
 	{
-		table_usr_qry[uid][qid].last_day = day;
-		table_usr_qry[uid][qid].latest_grade = grade;
+		user_queries[uid].queries.push_front(qid);
+		user_queries[uid].queryMetadata[qid].last_time_day = day;
+		user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
+	}
+	else
+	{
+		user_queries[uid].queries.erase(it);
+		user_queries[uid].queries.push_front(qid);
+		user_queries[uid].queryMetadata[qid].last_time_day = day;
+		user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
 	}
 }
 
-bool usr_qry::exists(int uid, int qid)
+void usr_qry::updateClicked_userQueries(int uid, int qid, int urlid, int grade)
 {
-	if(table_usr_qry.find(uid) == table_usr_qry.end() || table_usr_qry[uid].find(qid) == table_usr_qry[uid].end())
-		return false;
-	return true;
+
 }
 
-int usr_qry::getMaxGrade_forSimilar(int uid, int qid)
+void usr_qry::updateShown_local(int uid, int qid, int urlid, int time)
 {
-	int recent_similar_query = getRecentSimilarQuery(qid);
-	return table_usr_qry[uid][recent_similar_query].max_grade;
+
 }
 
-int usr_qry::getLatestGrade_forSimilar(int uid, int qid)
+void usr_qry::updateClicked_local(int uid, int qid, int urlid, int grade)
 {
-	int recent_similar_query = getRecentSimilarQuery(qid);
-	return table_usr_qry[uid][recent_similar_query].latest_grade;
+
 }
 
-int usr_qry::getLastDay_forSimilar(int uid, int qid)
+void usr_qry::copyLocalToGlobal_and_ClearLocal(int day)
 {
-	int recent_similar_query = getRecentSimilarQuery(qid);
-	return table_usr_qry[uid][recent_similar_query].last_day;
+
+}
+
+// it will return the data for nearest qid qualifying similarity criteria with true, false if doesn't exist
+bool usr_qry::getRecentSimilarQueryData(int session_or_day, int uid, int actual_qid, int &time_or_day, bool &URLshown, int &grade_that_time)
+{
+
 }

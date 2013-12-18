@@ -23,6 +23,7 @@ serp_id, url_id // iterate over map serpURLs to print all it
 #include "DataCollector.h"
 #include "variables.h"
 #include "Processor.h"
+#include "global.h"
 #include "usr_url.h"
 #include "usr_qry.h"
 #include "queryTerm_Logger.h"

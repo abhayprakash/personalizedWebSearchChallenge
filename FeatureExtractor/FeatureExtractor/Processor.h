@@ -1,7 +1,7 @@
 #pragma once
 #include "FeatureFileLogger.h"
 #include "DataCollector.h"
-#include "global_memory.h"
+#include "global.h"
 #include "usr_url.h"
 #include "usr_qry.h"
 
@@ -12,7 +12,7 @@
  */
 class Processor{
 public:
-	void processTrain(DataCollector &dc, usr_url &store_usrURL, usr_qry &store_usrQry);
-	void processTest(DataCollector &dc, usr_url &store_usrURL, usr_qry &store_usrQry);
+	void processTrain(usr_url &store_usrURL, usr_qry &store_usrQry);
+	void processTest(usr_url &store_usrURL, usr_qry &store_usrQry);
 };
 
