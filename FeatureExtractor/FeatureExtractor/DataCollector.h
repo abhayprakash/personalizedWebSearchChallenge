@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DATACOLLECTOR_H_INCLUDED
+#define DATACOLLECTOR_H_INCLUDED
+
 #include "variables.h"
 #include "DomainURL_Logger.h"
 #include "serpURL_Logger.h"
@@ -19,3 +21,5 @@ public:
 	void parse(int test_1_train_0);
 	void wrapUp();
 };
+
+#endif

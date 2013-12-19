@@ -40,5 +40,7 @@ char RESULT_MAPPER_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChalleng
 // Computation parameters
 #define SIMILAR_INDEX_THRESH_FOR_QUERY 0.75
 #define UNCLICKED_CLASS -1 // make one submission with this value = 0 also
+#define RAND_SEED 25 // or make if time(0)
+#define PROB_KEEP_UNCLICKED_URL 0.2
 
 #endif // VARIABLES_H_INCLUDED

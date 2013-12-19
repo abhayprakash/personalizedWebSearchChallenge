@@ -31,18 +31,15 @@ void usr_qry::updateShown_local(int uid, int qid, int urlid, int time)
 	if(local_user_queries.find(uid) == local_user_queries.end() || local_user_queries[uid].queryMetadata.find(qid) == local_user_queries[uid].queryMetadata.end()) // no entry for it
 	{
 		local_user_queries[uid].queries.push_front(qid);
-		local_user_queries[uid].queryMetadata[qid].pointerToQID = local_user_queries[uid].queries.begin();
-		local_user_queries[uid].queryMetadata[qid].last_time_day = time;
-		local_user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
 	}
 	else
 	{
 		local_user_queries[uid].queries.erase(local_user_queries[uid].queryMetadata[qid].pointerToQID);
 		local_user_queries[uid].queries.push_front(qid);
-		local_user_queries[uid].queryMetadata[qid].pointerToQID = local_user_queries[uid].queries.begin();
-		local_user_queries[uid].queryMetadata[qid].last_time_day = time;
-		local_user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
 	}
+	local_user_queries[uid].queryMetadata[qid].pointerToQID = local_user_queries[uid].queries.begin();
+	local_user_queries[uid].queryMetadata[qid].last_time_day = time;
+	local_user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
 }
 
 void usr_qry::updateClicked_local(int uid, int qid, int urlid, int grade)

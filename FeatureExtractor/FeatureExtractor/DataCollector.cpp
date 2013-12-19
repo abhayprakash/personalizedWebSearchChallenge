@@ -119,7 +119,7 @@ void DataCollector::parse(int test_1_train_0)
 					{
 						duLogger.log(temp_domain, temp_url);
 						suLogger.log(g_serpid, temp_url); // could have flushed at one time as query-term but maintained the initial design
-						serpURLs[g_serpid].push_back(temp_url);
+						table_serpURLs[g_serpid].push_back(temp_url);
 						urlRank[temp_url] = rank;
 					}
 				}

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef USR_QRY_H_INCLUDED
+#define USR_QRY_H_INCLUDED
+
 #include "variables.h"
 #include <map>
 #include <vector>
@@ -44,3 +46,5 @@ public:
 	void copyLocalToGlobal_and_ClearLocal(int day);
 	bool getRecentSimilarQueryData(int session_or_day, int uid, int actual_qid, int urlid, int &time_or_day, bool &URLshown, int &grade_that_time); // it will return the data for nearest qid qualifying similarity criteria with true, false if doesn't exist
 };
+
+#endif
