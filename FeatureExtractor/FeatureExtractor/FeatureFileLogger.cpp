@@ -47,7 +47,7 @@ void FeatureFileLogger::logTest(rowToLog &rowLog)
 	char rowInLog[NUM_MAX_ROW_CHAR];
 	memset(rowInLog, 0, NUM_MAX_ROW_CHAR);
 	//prepare rowInLog
-	sprintf(rowInLog, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", , rowLog.user_id, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists, rowLog.url_sameSession.time_diff, rowLog.url_sameSession.grade, rowLog.url_beforeSession.exists, rowLog.url_beforeSession.time_diff, rowLog.url_beforeSession.grade, rowLog.query_sameSession.exists, rowLog.query_sameSession.time_diff, rowLog.query_sameSession.u_exists_for_q, rowLog.query_sameSession.grade, rowLog.query_beforeSession.exists, rowLog.query_beforeSession.time_diff, rowLog.query_beforeSession.u_exists_for_q, rowLog.query_beforeSession.grade);
+	sprintf(rowInLog, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", rowLog.user_id, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists, rowLog.url_sameSession.time_diff, rowLog.url_sameSession.grade, rowLog.url_beforeSession.exists, rowLog.url_beforeSession.time_diff, rowLog.url_beforeSession.grade, rowLog.query_sameSession.exists, rowLog.query_sameSession.time_diff, rowLog.query_sameSession.u_exists_for_q, rowLog.query_sameSession.grade, rowLog.query_beforeSession.exists, rowLog.query_beforeSession.time_diff, rowLog.query_beforeSession.u_exists_for_q, rowLog.query_beforeSession.grade);
 		
 	int bytesInRow = strlen(rowInLog);
 	if(bytesInRow + bytesUsedInBuffer <= sizeOfBuffer)
@@ -91,7 +91,7 @@ void FeatureFileLogger::logValidate(rowToLog &rowLog) // to implement
 	char rowInLog[NUM_MAX_ROW_CHAR];
 	memset(rowInLog, 0, NUM_MAX_ROW_CHAR);
 	//prepare rowInLog
-	sprintf(rowInLog, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", , rowLog.user_id, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists, rowLog.url_sameSession.time_diff, rowLog.url_sameSession.grade, rowLog.url_beforeSession.exists, rowLog.url_beforeSession.time_diff, rowLog.url_beforeSession.grade, rowLog.query_sameSession.exists, rowLog.query_sameSession.time_diff, rowLog.query_sameSession.u_exists_for_q, rowLog.query_sameSession.grade, rowLog.query_beforeSession.exists, rowLog.query_beforeSession.time_diff, rowLog.query_beforeSession.u_exists_for_q, rowLog.query_beforeSession.grade);
+	sprintf(rowInLog, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", rowLog.user_id, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists, rowLog.url_sameSession.time_diff, rowLog.url_sameSession.grade, rowLog.url_beforeSession.exists, rowLog.url_beforeSession.time_diff, rowLog.url_beforeSession.grade, rowLog.query_sameSession.exists, rowLog.query_sameSession.time_diff, rowLog.query_sameSession.u_exists_for_q, rowLog.query_sameSession.grade, rowLog.query_beforeSession.exists, rowLog.query_beforeSession.time_diff, rowLog.query_beforeSession.u_exists_for_q, rowLog.query_beforeSession.grade);
 		
 	int bytesInRow = strlen(rowInLog);
 	if(bytesInRow + bytesUsedInBuffer <= sizeOfBuffer)

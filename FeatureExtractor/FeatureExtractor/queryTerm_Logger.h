@@ -9,7 +9,7 @@ class queryTerm_Logger
 {
 	FILE* fp;
 	char *buffer;
-	const unsigned long long sizeOfBuffer = BUFF_SIZE_QT_FILE;
+	unsigned long long sizeOfBuffer;
 	unsigned long long bytesUsedInBuffer;
 	void flush();
 public:

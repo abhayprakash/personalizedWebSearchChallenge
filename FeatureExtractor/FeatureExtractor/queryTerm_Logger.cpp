@@ -13,6 +13,7 @@ void queryTerm_Logger::flush()
 
 queryTerm_Logger::queryTerm_Logger()
 {
+	sizeOfBuffer = BUFF_SIZE_QT_FILE;
 	fp = fopen(QUERY_TERM_FILE, "w");
 	buffer = (char *)malloc(sizeOfBuffer);
 	memset(buffer, 0, sizeOfBuffer);
@@ -25,7 +26,7 @@ void queryTerm_Logger::logAll(map<int, vector<int> > &queryTerms)
 	map<int, vector<int> >::iterator it;
 	for(it = queryTerms.begin(); it!=queryTerms.end(); it++)
 	{
-		for(int i = 0; i < it->second.size(); i++)
+		for(unsigned int i = 0; i < it->second.size(); i++)
 			log(it->first, it->second[i]);
 	}
 }

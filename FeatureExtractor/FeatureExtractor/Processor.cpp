@@ -70,7 +70,7 @@ void Processor::getURLRelatedFeatures(rowToLog &logRow, usr_url &store_usrURL, i
 	
 	if(logRow.url_beforeSession.exists)
 	{
-		logRow.url_beforeSession.time_diff = queryDay - store_usrURL.getLastDay();
+		logRow.url_beforeSession.time_diff = queryDay - store_usrURL.getLastDay(logRow.user_id, logRow.url_id);
 	}
 	else
 	{
@@ -187,7 +187,7 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 
 				// iteration over the urls in each query
 				// operation for clicked urls
-				for(int i_qClickedUrl = 0; i_qClickedUrl < it_query->clickedURL.size(); ++i_qClickedUrl)
+				for(unsigned int i_qClickedUrl = 0; i_qClickedUrl < it_query->clickedURL.size(); ++i_qClickedUrl)
 				{
 					logRow.url_id = it_query->clickedURL[i_qClickedUrl].url_id;
 					logRow.url_position = it_query->clickedURL[i_qClickedUrl].position;
@@ -209,7 +209,7 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 				}
 
 				// operation for nonclicked urls
-				for(int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl)
+				for(unsigned int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl)
 				{
 					logRow.url_id = table_serpURLs[it_query->shownSERP][i_serpurl];
 					// check if logged : continue, proceed to log for 20% unclicked urls
@@ -277,7 +277,7 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 				if(it_query+1 == session_data.queries.end()) // last query -> test
 				{
 					// iterate over all 10 urls in T query
-					for(int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl)
+					for(unsigned int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl)
 					{
 						logRow.url_id = table_serpURLs[it_query->shownSERP][i_serpurl];
 						logRow.url_position = i_serpurl + 1;
@@ -303,9 +303,9 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 				{
 					bool flag_qualifiesValidation = false;
 					map<int, int> i_of_ClickedURL;
-					for(int i_qClickedUrl = 0; i_qClickedUrl < it_query->clickedURL.size(); ++i_qClickedUrl)
+					for(unsigned int i_qClickedUrl = 0; i_qClickedUrl < it_query->clickedURL.size(); ++i_qClickedUrl)
 					{
-						i_of_ClickedURL[it_query->clickedURL[i_qClickedUrl]] = i_qClickedUrl;
+						i_of_ClickedURL[it_query->clickedURL[i_qClickedUrl].url_id] = i_qClickedUrl;
 						getGroundTruthWhenClicked(logRow, it_query, session_data, i_qClickedUrl);
 						if(logRow.resultGrade > 0)
 							flag_qualifiesValidation = true;
@@ -315,7 +315,7 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 						flag_qualifiesValidation = qualifiesForValidation(it_query, session_data, queryInShortContextExists, store_usrQry);
 					}
 					queryInShortContextExists[it_query->qid] = true;
-					for(int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl) // all 10 url even for non clicked
+					for(unsigned int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl) // all 10 url even for non clicked
 					{
 						logRow.url_id = table_serpURLs[it_query->shownSERP][i_serpurl];
 						

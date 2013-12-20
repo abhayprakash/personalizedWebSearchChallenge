@@ -17,7 +17,7 @@ domain_id, url_id // iterate over map domainURLs to print all it
 4.
 serp_id, url_id // iterate over map serpURLs to print all it
 */
-
+#include "stdafx.h"
 #include <map>
 #include <vector>
 #include "DataCollector.h"

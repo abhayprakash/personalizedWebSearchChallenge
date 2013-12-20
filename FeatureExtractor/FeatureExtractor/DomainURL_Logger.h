@@ -5,7 +5,7 @@ class DomainURL_Logger
 {
 	FILE* fp;
 	char *buffer;
-	const unsigned long long sizeOfBuffer = BUFF_SIZE_DU_FILE;
+	unsigned long long sizeOfBuffer;
 	unsigned long long bytesUsedInBuffer;
 	void flush();
 public:

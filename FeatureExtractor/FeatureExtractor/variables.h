@@ -2,28 +2,28 @@
 #define VARIABLES_H_INCLUDED
 
 // input files
-char TRAIN_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\small_train_dataset";
-char TEST_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\test";
+extern char TRAIN_FILE[256];
+extern char TEST_FILE[256];
 
 // output files
-char FEATURE_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\feature_train.txt";
-char FEATURE_TEST_PHASE_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\feature_test.txt";
-char FEATURE_VALIDATE_PHASE_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\feature_validate.txt";
+extern char FEATURE_FILE[256];
+extern char FEATURE_TEST_PHASE_FILE[256];
+extern char FEATURE_VALIDATE_PHASE_FILE[256];
 
-char DOMAIN_URL_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\DU_file.txt";
-char SERP_URL_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\SU_file.txt";
-char QUERY_TERM_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\QT_file.txt";
+extern char DOMAIN_URL_FILE[256];
+extern char SERP_URL_FILE[256];
+extern char QUERY_TERM_FILE[256];
 
-char RESULT_VALIDATE_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\result_validate.txt";
-char RESULT_MAPPER_FILE[256] = "E:\\Projects\\WSDM_PersonalisedWebSearchChallenge\\Data\\result_mapper.txt";
+extern char RESULT_VALIDATE_FILE[256];
+extern char RESULT_MAPPER_FILE[256];
 
 // memory allocation
-#define BUFF_SIZE_INPUT_READ 4*1024*1024*1024ull			// 4 GB
-#define BUFF_SIZE_FEATURE_FILE 5*1024*1024*1024ull			// 5 GB - objects (1 in processTrain)
-#define BUFF_SIZE_FEATURE_TEST_FILE 1*1024*1024*1024ull		// 1 GB - objects (4 in processTest)
-#define BUFF_SIZE_DU_FILE 1*1024*1024*1024ull				// 1 GB
-#define BUFF_SIZE_SU_FILE 1*1024*1024*1024ull				// 1 GB
-#define BUFF_SIZE_QT_FILE 5*1024*1024*1024ull				// 5 GB
+#define BUFF_SIZE_INPUT_READ 4*1024*1024ull;			// 4 GB
+#define BUFF_SIZE_FEATURE_FILE 5*1024*1024ull;			// 5 GB - objects (1 in processTrain)
+#define BUFF_SIZE_FEATURE_TEST_FILE 1*1024*1024ull;		// 1 GB - objects (4 in processTest)
+#define BUFF_SIZE_DU_FILE 1*1024*1024ull;				// 1 GB
+#define BUFF_SIZE_SU_FILE 1*1024*1024ull;				// 1 GB
+#define BUFF_SIZE_QT_FILE 5*1024*1024ull;				// 5 GB
 
 // Upper limits
 #define NUM_MAX_ROW_CHAR 150

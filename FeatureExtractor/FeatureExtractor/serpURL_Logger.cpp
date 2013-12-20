@@ -13,6 +13,7 @@ void serpURL_Logger::flush()
 
 serpURL_Logger::serpURL_Logger()
 {
+	sizeOfBuffer = BUFF_SIZE_SU_FILE;
 	fp = fopen(SERP_URL_FILE, "w");
 	buffer = (char *)malloc(sizeOfBuffer);
 	memset(buffer, 0, sizeOfBuffer);

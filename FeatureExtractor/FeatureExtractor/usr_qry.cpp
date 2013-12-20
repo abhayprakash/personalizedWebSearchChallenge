@@ -79,11 +79,11 @@ bool usr_qry::getRecentSimilarQueryData(int session_or_day, int uid, int actual_
 			matchThisQuery = *it;
 			count = 0;
 			q1_has_term.clear();
-			for(int i = 0; i < queryTerms[matchThisQuery].size(); ++i)
+			for(unsigned int i = 0; i < queryTerms[matchThisQuery].size(); ++i)
 			{
 				q1_has_term[queryTerms[matchThisQuery][i]] = true;
 			}
-			for(int i = 0; i < queryTerms[actual_qid].size(); ++i)
+			for(unsigned int i = 0; i < queryTerms[actual_qid].size(); ++i)
 			{
 				if(q1_has_term[queryTerms[actual_qid][i]])
 				{
@@ -116,11 +116,11 @@ bool usr_qry::getRecentSimilarQueryData(int session_or_day, int uid, int actual_
 			matchThisQuery = *it;
 			count = 0;
 			q1_has_term.clear();
-			for(int i = 0; i < queryTerms[matchThisQuery].size(); ++i)
+			for(unsigned int i = 0; i < queryTerms[matchThisQuery].size(); ++i)
 			{
 				q1_has_term[queryTerms[matchThisQuery][i]] = true;
 			}
-			for(int i = 0; i < queryTerms[actual_qid].size(); ++i)
+			for(unsigned int i = 0; i < queryTerms[actual_qid].size(); ++i)
 			{
 				if(q1_has_term[queryTerms[actual_qid][i]])
 				{
