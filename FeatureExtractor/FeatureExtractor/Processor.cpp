@@ -18,128 +18,189 @@ for each session
 	-> copy local to global
 */
 
+//
+bool qualifiesForValidation(vector<queryRec>::iterator it_query, sessMetaData &session_data)
+{
+	if(it_query+2 != session_data.queries.end())
+		return false;
+
+	// "user that asked this query has no search sessions in the training period"
+	// if has include in validation set
+	if()
+		return true;
+
+	// "If the sampled query does not have any short-term context"
+	// if has
+	if()
+		return true;
+
+	return false;
+}
+
+// expects set logRow.user_id, logRow.url_id, logRow.query_id, logRow.resultGrade
+void Processor::updateLocal(usr_url &store_usrURL, usr_qry &store_usrQry, rowToLog &logRow, int queryTime)
+{
+	store_usrURL.updateLocal_Shown(logRow.user_id, logRow.url_id, queryTime);
+	store_usrQry.updateShown_local(logRow.user_id, logRow.query_id, logRow.url_id, queryTime);
+	store_usrURL.updateLocal_Click(logRow.user_id, logRow.url_id, logRow.resultGrade);
+	store_usrQry.updateClicked_local(logRow.user_id, logRow.query_id, logRow.url_id, logRow.resultGrade);
+}
+
+// expects set logRow.user_id, logRow.url_id
+void Processor::getGlobalFeatures(rowToLog &logRow, usr_url &store_usrURL) 
+{
+	// store(update) features both global and session : global things
+	logRow.count_earlier_0 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 0);
+	logRow.count_earlier_1 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 1);
+	logRow.count_earlier_2 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 2);
+	logRow.count_earlier_shown = store_usrURL.getCountShown(logRow.user_id, logRow.url_id);
+}
+
+// expects set logRow.user_id, logRow.url_id
+void Processor::getURLRelatedFeatures(rowToLog &logRow, usr_url &store_usrURL, int queryDay, int queryTime) 
+{
+	// store(update) features global
+	logRow.url_beforeSession.exists = store_usrURL.existsBeforeSession(logRow.user_id, logRow.url_id);
+	logRow.url_beforeSession.grade = store_usrURL.getLatestDayGrade(logRow.user_id, logRow.url_id);
+	
+	if(logRow.url_beforeSession.exists)
+	{
+		logRow.url_beforeSession.time_diff = queryDay - store_usrURL.getLastDay();
+	}
+	else
+	{
+		logRow.url_beforeSession.time_diff = 0;
+	}
+	
+	// store(update) features local
+	logRow.url_sameSession.exists = store_usrURL.existsCurrentSession(logRow.user_id, logRow.url_id);
+	logRow.url_sameSession.grade = store_usrURL.getLatestTimeGrade(logRow.user_id, logRow.url_id);
+	
+	if(logRow.url_sameSession.exists)
+	{
+		logRow.url_sameSession.time_diff = queryTime - store_usrURL.getLastTime(logRow.user_id, logRow.url_id);
+	}
+	else
+	{
+		logRow.url_sameSession.time_diff = 0;
+	}
+}
+
+// expects logRow.user_id, logRow.query_id, logRow.url_id
+void Processor::getQueryRelatedFeatures(rowToLog &logRow, usr_qry &store_usrQry, int queryDay, int queryTime) 
+{
+	int time_day_of_found_query;
+	
+	// store(update) features global
+	if(store_usrQry.getRecentSimilarQueryData(SEARCH_BEFORE_SESSION, logRow.user_id, logRow.query_id, logRow.url_id, time_day_of_found_query, logRow.query_beforeSession.u_exists_for_q, logRow.query_beforeSession.grade))
+	{
+		logRow.query_beforeSession.exists =  true;
+		logRow.query_beforeSession.time_diff = queryDay - time_day_of_found_query;
+	}
+	else
+	{
+		logRow.query_beforeSession.exists =  false;
+		logRow.query_beforeSession.time_diff = 0;
+		logRow.query_beforeSession.u_exists_for_q = false;
+		logRow.query_beforeSession.grade = 0;
+	}
+
+	// store(update) features local
+	if(store_usrQry.getRecentSimilarQueryData(SEARCH_IN_SESSION, logRow.user_id, logRow.query_id, logRow.url_id, time_day_of_found_query, logRow.query_sameSession.u_exists_for_q, logRow.query_sameSession.grade))
+	{
+		logRow.query_sameSession.exists =  true;
+		logRow.query_sameSession.time_diff = queryTime - time_day_of_found_query;
+	}
+	else
+	{
+		logRow.query_sameSession.exists =  false;
+		logRow.query_sameSession.time_diff = 0;
+		logRow.query_sameSession.u_exists_for_q = false;
+		logRow.query_sameSession.grade = 0;
+	}
+}
+
+// expects nothing in logRow
+void Processor::getGroundTruthWhenClicked(rowToLog &logRow, vector<queryRec>::iterator it_query, sessMetaData &session_data, int i_qClickedUrl)
+{
+	int timeGivenOnURL, time_nextActivity;
+	// if last click of session
+	if(it_query+1 == session_data.queries.end() && i_qClickedUrl+1 == it_query->clickedURL.size()) 
+	{
+		timeGivenOnURL = 404; // a dummy value greater than 400
+	}
+	// if last click of query
+	else if(i_qClickedUrl+1 == it_query->clickedURL.size()) 
+	{
+		time_nextActivity = (it_query+1)->timeOfQuery;
+		timeGivenOnURL = time_nextActivity - it_query->clickedURL[i_qClickedUrl].timeOfClick;
+	}
+	// same query has next click
+	else 
+	{
+		time_nextActivity = it_query->clickedURL[i_qClickedUrl+1].timeOfClick;
+		timeGivenOnURL = time_nextActivity - it_query->clickedURL[i_qClickedUrl].timeOfClick;
+	}
+
+	logRow.resultGrade = 0;
+	if( timeGivenOnURL >= 50) 
+	{
+		logRow.resultGrade = 1;
+	}
+	if( timeGivenOnURL >= 400) 
+	{
+		logRow.resultGrade = 2;
+	}
+}
+
 void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 {
 	FeatureFileLogger logger_feature_train(FEATURE_FILE, CALL_FROM_PROCESS_TEST);
 	rowToLog logRow;
 	
 	// temp
-	int session_id;
-	int time_nextActivity;
-	int timeGivenOnURL;
 	sessMetaData session_data;
 	map<int, bool> url_logged;
 	srand(RAND_SEED);
 
+	// iteration over days
 	for(int i_day = 1; i_day <= 27; i_day++)
 	{
 		// use it as RecordOfDay[day][session_id].{uid|queries[i].{qid|timeOfQuery|clickedURL[i].{urlid|timeOfClick|position}}}
-		map<int, sessMetaData>::iterator it_session;
-		for(it_session = RecordOfDay[i_day].begin(); it_session != RecordOfDay[i_day].end(); ++it_session)
+				
+		// iteration over session in a day
+		for(map<int, sessMetaData>::iterator it_session = RecordOfDay[i_day].begin(); it_session != RecordOfDay[i_day].end(); ++it_session)
 		{
-			session_id = it_session->first;
 			session_data = it_session->second;
 			logRow.user_id = session_data.uid;
+			
+			//iteration over queries in a session
 			for(vector<queryRec>::iterator it_query = session_data.queries.begin(); it_query != session_data.queries.end(); ++it_query)
 			{
 				url_logged.clear();
 				logRow.query_id = it_query->qid;
+
+				// iteration over the urls in each query
 				// operation for clicked urls
 				for(int i_qClickedUrl = 0; i_qClickedUrl < it_query->clickedURL.size(); ++i_qClickedUrl)
 				{
 					logRow.url_id = it_query->clickedURL[i_qClickedUrl].url_id;
 					logRow.url_position = it_query->clickedURL[i_qClickedUrl].position;
 
-					// store(update) features both global and session : global things
-					logRow.count_earlier_0 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 0);
-					logRow.count_earlier_1 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 1);
-					logRow.count_earlier_2 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 2);
-					logRow.count_earlier_shown = store_usrURL.getCountShown(logRow.user_id, logRow.url_id);
+					// get all features
+					getGlobalFeatures(logRow, store_usrURL);
 
-					// store(update) features both global and session : url related
-					logRow.url_beforeSession.exists = store_usrURL.existsBeforeSession(logRow.user_id, logRow.url_id);
-					logRow.url_beforeSession.grade = store_usrURL.getLatestDayGrade(logRow.user_id, logRow.url_id);
-					if(logRow.url_beforeSession.exists)
-					{
-						logRow.url_beforeSession.time_diff = i_day - store_usrURL.getLastDay();
-					}
-					else
-					{
-						logRow.url_beforeSession.time_diff = 0;
-					}
-					logRow.url_sameSession.exists = store_usrURL.existsCurrentSession(logRow.user_id, logRow.url_id);
-					logRow.url_sameSession.grade = store_usrURL.getLatestTimeGrade(logRow.user_id, logRow.url_id);
-					if(logRow.url_sameSession.exists)
-					{
-						logRow.url_sameSession.time_diff = it_query->timeOfQuery - store_usrURL.getLastTime(logRow.user_id, logRow.url_id);
-					}
-					else
-					{
-						logRow.url_sameSession.time_diff = 0;
-					}
-					// store(update) features both global and session : query related
-					int time_day_of_found_query;
-					if(store_usrQry.getRecentSimilarQueryData(SEARCH_BEFORE_SESSION, logRow.user_id, logRow.query_id, logRow.url_id, time_day_of_found_query, logRow.query_beforeSession.u_exists_for_q, logRow.query_beforeSession.grade))
-					{
-						logRow.query_beforeSession.exists =  true;
-						logRow.query_beforeSession.time_diff = i_day - time_day_of_found_query;
-					}
-					else
-					{
-						logRow.query_beforeSession.exists =  false;
-						logRow.query_beforeSession.time_diff = 0;
-						logRow.query_beforeSession.u_exists_for_q = false;
-						logRow.query_beforeSession.grade = 0;
-					}
+					getURLRelatedFeatures(logRow, store_usrURL, i_day, it_query->timeOfQuery);
+					getQueryRelatedFeatures(logRow, store_usrQry, i_day, it_query->timeOfQuery);
 
-					if(store_usrQry.getRecentSimilarQueryData(SEARCH_IN_SESSION, logRow.user_id, logRow.query_id, logRow.url_id, time_day_of_found_query, logRow.query_sameSession.u_exists_for_q, logRow.query_sameSession.grade))
-					{
-						logRow.query_sameSession.exists =  true;
-						logRow.query_sameSession.time_diff = it_query->timeOfQuery - time_day_of_found_query;
-					}
-					else
-					{
-						logRow.query_sameSession.exists =  false;
-						logRow.query_sameSession.time_diff = 0;
-						logRow.query_sameSession.u_exists_for_q = false;
-						logRow.query_sameSession.grade = 0;
-					}
-
-					// ground truth
-					if(it_query+1 == session_data.queries.end() && i_qClickedUrl+1 == it_query->clickedURL.size()) // if last click of session
-					{
-						timeGivenOnURL = 404;
-					}
-					else if(i_qClickedUrl+1 == it_query->clickedURL.size()) // if last click of query
-					{
-						time_nextActivity = (it_query+1)->timeOfQuery;
-						timeGivenOnURL = time_nextActivity - it_query->clickedURL[i_qClickedUrl].timeOfClick;
-					}
-					else // same query has next click
-					{
-						time_nextActivity = it_query->clickedURL[i_qClickedUrl+1].timeOfClick;
-						timeGivenOnURL = time_nextActivity - it_query->clickedURL[i_qClickedUrl].timeOfClick;
-					}
-
-					logRow.resultGrade = 0;
-					if( timeGivenOnURL >= 50) 
-					{
-						logRow.resultGrade = 1;
-					}
-					if( timeGivenOnURL >= 400) 
-					{
-						logRow.resultGrade = 2;
-					}
+					getGroundTruthWhenClicked(logRow, it_query, session_data, i_qClickedUrl);
 
 					// log and mark logged
 					url_logged[logRow.url_id] = true;
 					logger_feature_train.logTrain(logRow);
 
 					// update local
-					store_usrURL.updateLocal_Shown(logRow.user_id, logRow.url_id, it_query->timeOfQuery);
-					store_usrQry.updateShown_local(logRow.user_id, logRow.query_id, logRow.url_id, it_query->timeOfQuery);
-					store_usrURL.updateLocal_Click(logRow.user_id, logRow.url_id, logRow.resultGrade);
-					store_usrQry.updateClicked_local(logRow.user_id, logRow.query_id, logRow.url_id, logRow.resultGrade);
+					updateLocal(store_usrURL, store_usrQry, logRow, it_query->timeOfQuery);
 				}
 
 				// operation for nonclicked urls
@@ -152,74 +213,25 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 						continue;
 					}
 
+					// ground truth
+					logRow.resultGrade = UNCLICKED_CLASS;
+
 					if(rand() > 1.0 - PROB_KEEP_UNCLICKED_URL)
 					{
 						logRow.url_position = i_serpurl + 1;
 
-						// store(update) features both global and session : global things
-						logRow.count_earlier_0 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 0);
-						logRow.count_earlier_1 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 1);
-						logRow.count_earlier_2 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 2);
-						logRow.count_earlier_shown = store_usrURL.getCountShown(logRow.user_id, logRow.url_id);
+						// get all features
+						getGlobalFeatures(logRow, store_usrURL);
 
-						// store(update) features both global and session : url related
-						logRow.url_beforeSession.exists = store_usrURL.existsBeforeSession(logRow.user_id, logRow.url_id);
-						logRow.url_beforeSession.grade = store_usrURL.getLatestDayGrade(logRow.user_id, logRow.url_id);
-						if(logRow.url_beforeSession.exists)
-						{
-							logRow.url_beforeSession.time_diff = i_day - store_usrURL.getLastDay();
-						}
-						else
-						{
-							logRow.url_beforeSession.time_diff = 0;
-						}
-						logRow.url_sameSession.exists = store_usrURL.existsCurrentSession(logRow.user_id, logRow.url_id);
-						logRow.url_sameSession.grade = store_usrURL.getLatestTimeGrade(logRow.user_id, logRow.url_id);
-						if(logRow.url_sameSession.exists)
-						{
-							logRow.url_sameSession.time_diff = it_query->timeOfQuery - store_usrURL.getLastTime(logRow.user_id, logRow.url_id);
-						}
-						else
-						{
-							logRow.url_sameSession.time_diff = 0;
-						}
-						// store(update) features both global and session : query related
-						int time_day_of_found_query;
-						if(store_usrQry.getRecentSimilarQueryData(SEARCH_BEFORE_SESSION, logRow.user_id, logRow.query_id, logRow.url_id, time_day_of_found_query, logRow.query_beforeSession.u_exists_for_q, logRow.query_beforeSession.grade))
-						{
-							logRow.query_beforeSession.exists =  true;
-							logRow.query_beforeSession.time_diff = i_day - time_day_of_found_query;
-						}
-						else
-						{
-							logRow.query_beforeSession.exists =  false;
-							logRow.query_beforeSession.time_diff = 0;
-							logRow.query_beforeSession.u_exists_for_q = false;
-							logRow.query_beforeSession.grade = 0;
-						}
+						getURLRelatedFeatures(logRow, store_usrURL, i_day, it_query->timeOfQuery);
+						getQueryRelatedFeatures(logRow, store_usrQry, i_day, it_query->timeOfQuery);
 
-						if(store_usrQry.getRecentSimilarQueryData(SEARCH_IN_SESSION, logRow.user_id, logRow.query_id, logRow.url_id, time_day_of_found_query, logRow.query_sameSession.u_exists_for_q, logRow.query_sameSession.grade))
-						{
-							logRow.query_sameSession.exists =  true;
-							logRow.query_sameSession.time_diff = it_query->timeOfQuery - time_day_of_found_query;
-						}
-						else
-						{
-							logRow.query_sameSession.exists =  false;
-							logRow.query_sameSession.time_diff = 0;
-							logRow.query_sameSession.u_exists_for_q = false;
-							logRow.query_sameSession.grade = 0;
-						}
-
-						// ground truth
-						logRow.resultGrade = UNCLICKED_CLASS;					
-
-						// log
+						// log this url un train
 						logger_feature_train.logTrain(logRow);
 					}
+
 					// update local
-					store_usrQry.updateShown_local(logRow.user_id, it_query->qid, table_serpURLs[it_query->shownSERP][i_serpurl],it_query->timeOfQuery);
-					store_usrURL.updateLocal_Shown(logRow.user_id, table_serpURLs[it_query->shownSERP][i_serpurl],it_query->timeOfQuery);
+					updateLocal(store_usrURL, store_usrQry, logRow, it_query->timeOfQuery);
 				}
 			}
 			// copy local to global
@@ -239,56 +251,93 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 	rowToLog logRow; //logTest, logValidate
 	resultRow result_Row;
 	// temp
-	int timeGivenOnURL;
-	int time_nextActivity;
-	int session_id;
-	int time_previousActivity;
 	sessMetaData session_data;
+	int rowsLoggedInTest = 0;
 
+	// iterate over days
 	for(int i_day = 28; i_day <= 30; i_day++)
 	{
 		// use it as RecordOfDay[day][session_id].{uid|queries[i].{qid|timeOfQuery|clickedURL[i].{urlid|timeOfClick|position}}}
-		map<int, sessMetaData>::iterator it_session;
-		for(it_session = RecordOfDay[i_day].begin(); it_session != RecordOfDay[i_day].end(); ++it_session)
+		// itererate over sessions in a day
+		for(map<int, sessMetaData>::iterator it_session = RecordOfDay[i_day].begin(); it_session != RecordOfDay[i_day].end(); ++it_session)
 		{
-			session_id = it_session->first;
+			result_Row.session_id = it_session->first;
 			session_data = it_session->second;
 			logRow.user_id = session_data.uid;
+			//iterate over queries in a session
 			for(vector<queryRec>::iterator it_query = session_data.queries.begin(); it_query != session_data.queries.end(); ++it_query)
 			{
+				logRow.query_id = it_query->qid;
 				if(it_query+1 == session_data.queries.end()) // last query -> test
 				{
-					for() // all 10 urls
+					// iterate over all 10 urls in T query
+					for(int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl)
 					{
-						// get features
+						logRow.url_id = table_serpURLs[it_query->shownSERP][i_serpurl];
+						logRow.url_position = i_serpurl + 1;
+						result_Row.url_id = logRow.url_id;
+						result_Row.url_pos = i_serpurl + 1;
 
+						// get features
+						getGlobalFeatures(logRow, store_usrURL);
+						getURLRelatedFeatures(logRow, store_usrURL, i_day, it_query->timeOfQuery);
+						getQueryRelatedFeatures(logRow, store_usrQry, i_day, it_query->timeOfQuery);
+
+						// log row in test file
 						logger_feature_test.logTest(logRow);
-						logger_resultMapper.logMap();
-						//update shown
+						
+						result_Row.rowNum = rowsLoggedInTest;
+						rowsLoggedInTest++;
+						// log in result mapper so as to output session_id and URLid(ordered by class and urlpos)
+						logger_resultMapper.logMap(result_Row);			
 					}
 				}
-				else if(it_query+2 == session_data.queries.end()) // second last query -> validate
-				{					
-					for() // all 10 url
-					{
-						// get feature
-
-						logger_feature_validate.logValidate(logRow);
-						int tempGrade = UNCLICKED_CLASS;
-						// compute the gade
-
-						logger_validate_result.logVR(tempGrade);
-						//update shown and click
-					}					
-				}
+				// second last query -> validate
 				else
 				{
-					for() // all clicked
+					bool flag_qualifiesValidation = false;
+					map<int, int> i_of_ClickedURL;
+					for(int i_qClickedUrl = 0; i_qClickedUrl < it_query->clickedURL.size(); ++i_qClickedUrl)
 					{
+						i_of_ClickedURL[it_query->clickedURL[i_qClickedUrl]] = i_qClickedUrl;
+						getGroundTruthWhenClicked(logRow, it_query, session_data, i_qClickedUrl);
+						if(logRow.resultGrade > 0)
+							flag_qualifiesValidation = true;
 					}
-					for() // non clicked
+					if(flag_qualifiesValidation)
 					{
+						 flag_qualifiesValidation = qualifiesForValidation(it_query, session_data);
 					}
+					for(int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl) // all 10 url even for non clicked
+					{
+						logRow.url_id = table_serpURLs[it_query->shownSERP][i_serpurl];
+						
+						// if clicked, get class
+						if(i_of_ClickedURL.find(logRow.url_id) != i_of_ClickedURL.end())
+						{
+							getGroundTruthWhenClicked(logRow, it_query, session_data, i_of_ClickedURL[logRow.url_id]);
+						}
+						// if not clicked class := -1
+						logRow.resultGrade = UNCLICKED_CLASS;
+						
+						if(flag_qualifiesValidation) // validation set
+						{
+							logRow.url_position = i_serpurl + 1;
+						
+							// get features
+							getGlobalFeatures(logRow, store_usrURL);
+							getURLRelatedFeatures(logRow, store_usrURL, i_day, it_query->timeOfQuery);
+							getQueryRelatedFeatures(logRow, store_usrQry, i_day, it_query->timeOfQuery);
+
+							// log row in validate file
+							logger_feature_validate.logValidate(logRow);
+
+							// log to logVR
+							logger_validate_result.logVR(logRow.resultGrade);
+						}
+						//update local
+						updateLocal(store_usrURL, store_usrQry, logRow, it_query->timeOfQuery);
+					}					
 				}
 			}
 			// copy local to global

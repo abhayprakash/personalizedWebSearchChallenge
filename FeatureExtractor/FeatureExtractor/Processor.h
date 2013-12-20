@@ -11,6 +11,11 @@
  * records of [28,30] days -> processTest  -> {FeatureTestLogger, FeatureValidateLogger, map<rowInFeatureTest,sessionID>, validate_result}
  */
 class Processor{
+	void Processor::updateLocal(usr_url &store_usrURL, usr_qry &store_usrQry, rowToLog &logRow, int queryTime);
+	void Processor::getGlobalFeatures(rowToLog &logRow, usr_url &store_usrURL);
+	void Processor::getURLRelatedFeatures(rowToLog &logRow, usr_url &store_usrURL, int queryDay, int queryTime);
+	void Processor::getQueryRelatedFeatures(rowToLog &logRow, usr_qry &store_usrQry, int queryDay, int queryTime);
+	void Processor::getGroundTruthWhenClicked(rowToLog &logRow, vector<queryRec>::iterator it_query, sessMetaData &session_data, int i_qClickedUrl);
 public:
 	void processTrain(usr_url &store_usrURL, usr_qry &store_usrQry);
 	void processTest(usr_url &store_usrURL, usr_qry &store_usrQry);

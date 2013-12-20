@@ -28,7 +28,7 @@ public:
 	FeatureFileLogger(char* path, int test_or_train);	
 	void logTrain(rowToLog &rowLog);
 	void logTest(rowToLog &rowLog);
-	void logMap(resultRow &rowLog); 
+	void logMap(resultRow &result_Row);
 	void logValidate(rowToLog &rowLog); 
 	void logVR(int actualResult); 
 	void wrapUp();

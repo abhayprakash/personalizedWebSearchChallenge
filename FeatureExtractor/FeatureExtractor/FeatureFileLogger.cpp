@@ -63,12 +63,14 @@ void FeatureFileLogger::logTest(rowToLog &rowLog)
 	}
 }
 
-void FeatureFileLogger::logMap(resultRow &rowLog) // to implement
+// use rowNum to get the class of this row from the other result file produced by classifier 
+// result_Row.rowNum, result_Row.session_id, result_Row.url_id, result_Row.url_pos
+void FeatureFileLogger::logMap(resultRow &result_Row)
 {
 	char rowInLog[NUM_MAX_ROW_CHAR];
 	memset(rowInLog, 0, NUM_MAX_ROW_CHAR);
 	//prepare rowInLog
-	sprintf(rowInLog, "%d,%d,%d,%d\n", rowLog.rowNum, rowLog.session_id, rowLog.url_id, rowLog.url_pos); // use it with result column to print the result, url_pos is for sorting the same predicted class
+	sprintf(rowInLog, "%d,%d,%d,%d\n", result_Row.rowNum, result_Row.session_id, result_Row.url_id, result_Row.url_pos); // use it with result column to print the result, url_pos is for sorting the same predicted class
 		
 	int bytesInRow = strlen(rowInLog);
 	if(bytesInRow + bytesUsedInBuffer <= sizeOfBuffer)
