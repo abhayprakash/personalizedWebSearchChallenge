@@ -18,12 +18,12 @@ extern char RESULT_VALIDATE_FILE[256];
 extern char RESULT_MAPPER_FILE[256];
 
 // memory allocation
-#define BUFF_SIZE_INPUT_READ 4*1024*1024ull;			// 4 GB
-#define BUFF_SIZE_FEATURE_FILE 5*1024*1024ull;			// 5 GB - objects (1 in processTrain)
-#define BUFF_SIZE_FEATURE_TEST_FILE 1*1024*1024ull;		// 1 GB - objects (4 in processTest)
-#define BUFF_SIZE_DU_FILE 1*1024*1024ull;				// 1 GB
-#define BUFF_SIZE_SU_FILE 1*1024*1024ull;				// 1 GB
-#define BUFF_SIZE_QT_FILE 5*1024*1024ull;				// 5 GB
+#define BUFF_SIZE_INPUT_READ 4*1024*1024*1024ull;			// 4 GB
+#define BUFF_SIZE_FEATURE_FILE 5*1024*1024*1024ull;			// 5 GB - objects (1 in processTrain)
+#define BUFF_SIZE_FEATURE_TEST_FILE 1*1024*1024*1024ull;	// 1 GB - objects (4 in processTest)
+#define BUFF_SIZE_DU_FILE 1*1024*1024*1024ull;				// 1 GB
+#define BUFF_SIZE_SU_FILE 1*1024*1024*1024ull;				// 1 GB
+#define BUFF_SIZE_QT_FILE 5*1024*1024*1024ull;				// 5 GB
 
 // Upper limits
 #define NUM_MAX_ROW_CHAR 150
