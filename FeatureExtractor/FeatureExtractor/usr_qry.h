@@ -42,9 +42,9 @@ class usr_qry{
 public:
 	void updateShown_local(int uid, int qid, int urlid, int time);
 	void updateClicked_local(int uid, int qid, int urlid, int grade);
-
 	void copyLocalToGlobal_and_ClearLocal(int day);
 	bool getRecentSimilarQueryData(int session_or_day, int uid, int actual_qid, int urlid, int &time_or_day, bool &URLshown, int &grade_that_time); // it will return the data for nearest qid qualifying similarity criteria with true, false if doesn't exist
+	int getOldestQueryDay(int uid);
 };
 
 #endif

@@ -19,21 +19,26 @@ for each session
 */
 
 //
-bool qualifiesForValidation(vector<queryRec>::iterator it_query, sessMetaData &session_data)
+bool Processor::qualifiesForValidation(vector<queryRec>::iterator it_query, sessMetaData &session_data, map<int, bool> &queryInShortContextExists, usr_qry &store_usrQry)
 {
 	if(it_query+2 != session_data.queries.end())
 		return false;
 
-	// "user that asked this query has no search sessions in the training period"
-	// if has include in validation set
-	if()
+	// statement: "If the sampled query does not have any short-term context"
+	// if it has, include
+	if(queryInShortContextExists[it_query->qid])
 		return true;
 
-	// "If the sampled query does not have any short-term context"
-	// if has
-	if()
+	// statement: "user that asked this query has no search sessions in the training period"
+	// if it has, include in validation set 
+	// for this check the day of last query in the user's query list if it is <= 27 return true
+	// a little probability of missing: latest day of oldest query may be in test days whereas its first day could be in train time
+	// but this would just miss some cases but not include any wrong one - resulting a bit small validation set that could have been got
+	// this is probably better than allocating 4 byte data to each query for its first day or any other way of iteration over 27 days
+	int lastestDayOfOldestQuery = store_usrQry.getOldestQueryDay(session_data.uid);
+	if( lastestDayOfOldestQuery > 0 && lastestDayOfOldestQuery <= 27)
 		return true;
-
+	
 	return false;
 }
 
@@ -261,6 +266,7 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 		// itererate over sessions in a day
 		for(map<int, sessMetaData>::iterator it_session = RecordOfDay[i_day].begin(); it_session != RecordOfDay[i_day].end(); ++it_session)
 		{
+			map<int, bool> queryInShortContextExists;
 			result_Row.session_id = it_session->first;
 			session_data = it_session->second;
 			logRow.user_id = session_data.uid;
@@ -306,8 +312,9 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 					}
 					if(flag_qualifiesValidation)
 					{
-						 flag_qualifiesValidation = qualifiesForValidation(it_query, session_data);
+						flag_qualifiesValidation = qualifiesForValidation(it_query, session_data, queryInShortContextExists, store_usrQry);
 					}
+					queryInShortContextExists[it_query->qid] = true;
 					for(int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl) // all 10 url even for non clicked
 					{
 						logRow.url_id = table_serpURLs[it_query->shownSERP][i_serpurl];
