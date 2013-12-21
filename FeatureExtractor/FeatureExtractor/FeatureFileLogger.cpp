@@ -5,6 +5,7 @@
 
 FeatureFileLogger::FeatureFileLogger(char* path, int test_or_train)
 {
+	printf("opening %s\n", path);
 	fp = fopen(path, "w");
 	strcpy(tempPath, path);
 	if(test_or_train == CALL_FROM_PROCESS_TRAIN)

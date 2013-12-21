@@ -32,17 +32,22 @@ using namespace std;
 
 int main()
 {
+	printf("Starting: All the best!! :)\n");
 	DataCollector dc;
 	usr_url store_usrURL;
 	usr_qry store_usrQry;
 	Processor P;
-	
+	printf("parsing test file\n");
 	dc.parse(PARSE_TEST_FILE);
+	printf("parsing train file\n");
 	dc.parse(PARSE_TRAIN_FILE);
+	printf("processing train\n");
 	P.processTrain(store_usrURL, store_usrQry);
+	printf("processing test\n");
 	P.processTest(store_usrURL, store_usrQry);
 	dc.wrapUp();
 
+	printf("qt logging\n");
 	queryTerm_Logger qt_Logger;
 	qt_Logger.logAll(queryTerms);
 }

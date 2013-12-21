@@ -14,6 +14,7 @@ void queryTerm_Logger::flush()
 queryTerm_Logger::queryTerm_Logger()
 {
 	sizeOfBuffer = BUFF_SIZE_QT_FILE;
+	printf("opening %s\n",QUERY_TERM_FILE); 
 	fp = fopen(QUERY_TERM_FILE, "w");
 	buffer = (char *)malloc(sizeOfBuffer);
 	memset(buffer, 0, sizeOfBuffer);

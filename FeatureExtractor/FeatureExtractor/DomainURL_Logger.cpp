@@ -14,6 +14,7 @@ void DomainURL_Logger::flush()
 DomainURL_Logger::DomainURL_Logger()
 {
 	sizeOfBuffer = BUFF_SIZE_DU_FILE;
+	printf("opening %s\n", DOMAIN_URL_FILE);
 	fp = fopen(DOMAIN_URL_FILE, "w");
 	buffer = (char *)malloc(sizeOfBuffer);
 	memset(buffer, 0, sizeOfBuffer);

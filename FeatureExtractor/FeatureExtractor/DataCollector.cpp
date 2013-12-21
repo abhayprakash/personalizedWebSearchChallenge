@@ -12,10 +12,15 @@ void DataCollector::parse(int test_1_train_0)
 {
 	FILE* fp;
 	if(test_1_train_0)
+	{
+		printf("opening %s\n", TEST_FILE);
 		fp = fopen(TEST_FILE, "r");
+	}
 	else
+	{
+		printf("opening %s\n", TRAIN_FILE);
 		fp = fopen(TRAIN_FILE, "r");
-
+	}
 	int nRead;
 	while((nRead = fread(buffer, 1, buffSize, fp)) > 0)
 	{

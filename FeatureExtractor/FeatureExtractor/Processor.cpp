@@ -171,6 +171,7 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 	// iteration over days
 	for(int i_day = 1; i_day <= 27; i_day++)
 	{
+		printf("process starting for day %d\n", i_day);
 		// use it as RecordOfDay[day][session_id].{uid|queries[i].{qid|timeOfQuery|clickedURL[i].{urlid|timeOfClick|position}}}
 				
 		// iteration over session in a day
@@ -262,6 +263,7 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 	// iterate over days
 	for(int i_day = 28; i_day <= 30; i_day++)
 	{
+		printf("process starting for day %d\n", i_day);
 		// use it as RecordOfDay[day][session_id].{uid|queries[i].{qid|timeOfQuery|clickedURL[i].{urlid|timeOfClick|position}}}
 		// itererate over sessions in a day
 		for(map<int, sessMetaData>::iterator it_session = RecordOfDay[i_day].begin(); it_session != RecordOfDay[i_day].end(); ++it_session)
