@@ -83,7 +83,7 @@ void DataCollector::parse(int test_1_train_0)
 				if(considerUser)
 				{
 					RecordOfDay[temp_day][temp_sid].queries.push_back(queryRec());
-					index_q = RecordOfDay[temp_day][temp_sid].queries.size();
+					index_q = RecordOfDay[temp_day][temp_sid].queries.size() - 1;
 					RecordOfDay[temp_day][temp_sid].queries[index_q].qid = temp_qid;
 					RecordOfDay[temp_day][temp_sid].queries[index_q].timeOfQuery = temp_time;
 					RecordOfDay[temp_day][temp_sid].queries[index_q].shownSERP = g_serpid;
@@ -136,7 +136,7 @@ void DataCollector::parse(int test_1_train_0)
 				if(considerUser)
 				{
 					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL.push_back(shownURL());
-					int index_u = RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL.size();
+					int index_u = RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL.size() - 1;
 					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL[index_u].position = urlRank[temp_url];
 					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL[index_u].url_id = temp_url;
 					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL[index_u].timeOfClick = temp_time;
