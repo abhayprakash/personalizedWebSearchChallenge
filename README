@@ -1,0 +1,5 @@
+This repository contains the codes used in the Yandex personalized web search challenge.
+
+-> FeatureExtractor is the code to parse the given files, compute the features and 
+prepare output files. Bulk read and write has been used.
+-> DBPopulator is the code to parse the given files(one of them being 16 GB) and make a DB from it.
