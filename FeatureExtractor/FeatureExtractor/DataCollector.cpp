@@ -24,11 +24,6 @@ void DataCollector::parse(int test_1_train_0)
 	int nRead;
 	while((nRead = fread(buffer, 1, buffSize, fp)) > 0)
 	{
-		if(test_1_train_0)
-			printf("Read a chunk of test file\n");
-		else
-			printf("Read a chunk of train file\n");
-
 		if(nRead == buffSize)
 		{
 			int movedBack = 0;
@@ -40,15 +35,21 @@ void DataCollector::parse(int test_1_train_0)
 			fseek(fp, -movedBack, SEEK_CUR);
 		}
 		buffer[nRead] = 0;
+		if(test_1_train_0)
+			printf("Read a chunk - %d bytes of test file\n", nRead);
+		else
+			printf("Read a chunk - %d bytes of train file\n", nRead);
+		
 		// do operation on buffer
 		istringstream buff_in(buffer);
+		
 		string rowInLog;
 		map<int, int> urlRank;
 		int index_q;
 
 		//temp vars
 		int temp_sid, temp_day, temp_time, temp_uid, temp_serp, temp_qid, temp_term, temp_url, temp_domain;
-		string temp_typeOrTime, temp_list, temp_s_term, temp_s_URLDomain, temp_s_URLID;;
+		string temp_typeOrTime, temp_list, temp_s_term, temp_s_URLDomain, temp_s_URLID;
 		
 		bool considerUser;
 		while(getline(buff_in, rowInLog))

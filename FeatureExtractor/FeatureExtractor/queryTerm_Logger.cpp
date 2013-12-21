@@ -55,6 +55,7 @@ void queryTerm_Logger::log(int qid, int termid)
 
 void queryTerm_Logger::wrapUp()
 {
+	flush();
 	fclose(fp);
 	free(buffer);
 	printf("QT file generation : Complete\n");

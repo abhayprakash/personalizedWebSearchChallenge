@@ -150,5 +150,8 @@ bool usr_qry::getRecentSimilarQueryData(int session_or_day, int uid, int actual_
 
 int usr_qry::getOldestQueryDay(int uid)
 {
-	return user_queries[uid].queryMetadata[user_queries[uid].queries.back()].last_time_day;
+	if(user_queries[uid].queries.size() != 0)
+		return user_queries[uid].queryMetadata[user_queries[uid].queries.back()].last_time_day;
+	else
+		return 0;
 }

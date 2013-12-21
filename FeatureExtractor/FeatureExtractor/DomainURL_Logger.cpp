@@ -45,6 +45,7 @@ void DomainURL_Logger::log(int did, int urlid)
 
 void DomainURL_Logger::wrapUp()
 {
+	flush();
 	fclose(fp);
 	free(buffer);
 	printf("DU file generation : complete\n");

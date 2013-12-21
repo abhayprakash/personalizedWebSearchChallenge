@@ -45,6 +45,7 @@ void serpURL_Logger::log(int sid, int urlid)
 
 void serpURL_Logger::wrapUp()
 {
+	flush();
 	fclose(fp);
 	free(buffer);
 	printf("SU file generation : Complete\n");
