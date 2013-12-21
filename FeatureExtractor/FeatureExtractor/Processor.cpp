@@ -221,8 +221,7 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 
 					// ground truth
 					logRow.resultGrade = UNCLICKED_CLASS;
-
-					if(rand() > 1.0 - PROB_KEEP_UNCLICKED_URL)
+					if((rand() % 100) < PROB_KEEP_UNCLICKED_URL)
 					{
 						logRow.url_position = i_serpurl + 1;
 
