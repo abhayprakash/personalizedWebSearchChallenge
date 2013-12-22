@@ -56,9 +56,9 @@ void DataCollector::parse(int test_1_train_0)
 		while(getline(buff_in, rowInLog))
 		{
 			countRow++;
-			if(countRow == 100000)
+			if(countRow == 1000000)
 			{
-				printf("done 100000\n");
+				printf("done 1000000\n");
 				countRow = 0;
 			}
 			istringstream sin(rowInLog);
@@ -130,8 +130,8 @@ void DataCollector::parse(int test_1_train_0)
 					//temp_sid temp_time temp_serp temp_qid temp_url temp_domain
 					if(considerUser)
 					{
-						duLogger.log(temp_domain, temp_url);
-						suLogger.log(g_serpid, temp_url); // could have flushed at one time as query-term but maintained the initial design
+//						duLogger.log(temp_domain, temp_url);
+//						suLogger.log(g_serpid, temp_url); // could have flushed at one time as query-term but maintained the initial design
 						table_serpURLs[g_serpid].push_back(temp_url);
 						urlRank[temp_url] = rank;
 					}
