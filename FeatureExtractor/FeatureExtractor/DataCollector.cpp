@@ -22,6 +22,16 @@ void DataCollector::parse(int test_1_train_0)
 		fp = fopen(TRAIN_FILE, "r");
 	}
 	int nRead;
+	string rowInLog;
+	map<int, int> urlRank;
+	int index_q;
+
+	//temp vars
+	int temp_sid, temp_day, temp_time, temp_uid, temp_serp, temp_qid, temp_term, temp_url, temp_domain;
+	string temp_typeOrTime, temp_list, temp_s_term, temp_s_URLDomain, temp_s_URLID;
+	
+	bool considerUser;
+	
 	while((nRead = fread(buffer, 1, buffSize, fp)) > 0)
 	{
 		if(nRead == buffSize)
@@ -42,18 +52,15 @@ void DataCollector::parse(int test_1_train_0)
 		
 		// do operation on buffer
 		istringstream buff_in(buffer);
-		
-		string rowInLog;
-		map<int, int> urlRank;
-		int index_q;
-
-		//temp vars
-		int temp_sid, temp_day, temp_time, temp_uid, temp_serp, temp_qid, temp_term, temp_url, temp_domain;
-		string temp_typeOrTime, temp_list, temp_s_term, temp_s_URLDomain, temp_s_URLID;
-		
-		bool considerUser;
+		int countRow = 0;
 		while(getline(buff_in, rowInLog))
 		{
+			countRow++;
+			if(countRow == 100000)
+			{
+				printf("done 100000\n");
+				countRow = 0;
+			}
 			istringstream sin(rowInLog);
 			sin>>temp_sid>>temp_typeOrTime;
 			if(temp_typeOrTime == "M")

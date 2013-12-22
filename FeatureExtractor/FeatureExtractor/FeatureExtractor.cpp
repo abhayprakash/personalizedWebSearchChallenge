@@ -41,13 +41,14 @@ int main()
 	dc.parse(PARSE_TEST_FILE);
 	printf("parsing train file\n");
 	dc.parse(PARSE_TRAIN_FILE);
+	dc.wrapUp();
 	printf("processing train\n");
 	P.processTrain(store_usrURL, store_usrQry);
 	printf("processing test\n");
 	P.processTest(store_usrURL, store_usrQry);
-	dc.wrapUp();
 
 	printf("qt logging\n");
 	queryTerm_Logger qt_Logger;
 	qt_Logger.logAll(queryTerms);
+	system("pause");
 }
