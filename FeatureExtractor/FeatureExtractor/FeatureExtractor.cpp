@@ -50,5 +50,4 @@ int main()
 	printf("qt logging\n");
 	queryTerm_Logger qt_Logger;
 	qt_Logger.logAll(queryTerms);
-	system("pause");
 }
