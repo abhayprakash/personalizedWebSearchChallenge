@@ -160,7 +160,7 @@ void Processor::getGroundTruthWhenClicked(rowToLog &logRow, vector<queryRec>::it
 
 void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 {
-	FeatureFileLogger logger_feature_train(FEATURE_FILE, CALL_FROM_PROCESS_TEST);
+	FileLogger logger_feature_train(FEATURE_TRAIN_FILE, BUFF_SIZE_FEATURE_TRAIN_FILE, MAX_ROW_MORE_THAN_20_TERMS);
 	rowToLog logRow;
 	
 	// temp
@@ -248,10 +248,10 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 
 void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 {
-	FeatureFileLogger logger_feature_test(FEATURE_TEST_PHASE_FILE, CALL_FROM_PROCESS_TEST);
-	FeatureFileLogger logger_resultMapper(RESULT_MAPPER_FILE, CALL_FROM_PROCESS_TEST);
-	FeatureFileLogger logger_feature_validate(FEATURE_VALIDATE_PHASE_FILE, CALL_FROM_PROCESS_TEST);
-	FeatureFileLogger logger_validate_result(RESULT_VALIDATE_FILE, CALL_FROM_PROCESS_TEST);
+	FileLogger logger_feature_test(FEATURE_TEST_PHASE_FILE, BUFF_SIZE_FEATURE_TEST_FILE, MAX_ROW_MORE_THAN_20_TERMS);
+	FileLogger logger_resultMapper(RESULT_MAPPER_FILE, BUFF_SIZE_RESULT_MAPPER, MAX_ROW_AROUND_10_TERMS);
+	FileLogger logger_feature_validate(FEATURE_VALIDATE_PHASE_FILE, BUFF_SIZE_VALIDATE_FILE, MAX_ROW_MORE_THAN_20_TERMS);
+	FileLogger logger_validate_result(RESULT_VALIDATE_FILE, BUFF_SIZE_VALIDATE_RESULT, MAX_ROW_CLASS_TERM);
 	
 	rowToLog logRow; //logTest, logValidate
 	resultRow result_Row;

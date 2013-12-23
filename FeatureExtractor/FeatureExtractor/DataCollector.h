@@ -2,9 +2,8 @@
 #define DATACOLLECTOR_H_INCLUDED
 
 #include "variables.h"
-#include "DomainURL_Logger.h"
-#include "serpURL_Logger.h"
 #include <sstream>
+#include "FileLogger.h"
 //#include <map>
 
 using namespace std;
@@ -13,9 +12,8 @@ using namespace std;
 class DataCollector{
 	char *buffer;
 	unsigned long long buffSize;
-	DomainURL_Logger duLogger;
-	serpURL_Logger suLogger;
 
+	FileLogger* duLogger, *suLogger;
 public:
 	DataCollector(); 
 	void parse(int test_1_train_0);

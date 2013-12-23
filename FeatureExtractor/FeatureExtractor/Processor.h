@@ -1,7 +1,7 @@
 #ifndef PROCESSOR_H_INCLUDED
 #define PROCESSOR_H_INCLUDED
 
-#include "FeatureFileLogger.h"
+#include "FileLogger.h"
 #include "usr_url.h"
 #include "usr_qry.h"
 #include "variables.h"

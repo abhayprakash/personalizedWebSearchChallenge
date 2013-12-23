@@ -26,7 +26,7 @@ serp_id, url_id // iterate over map serpURLs to print all it
 #include "global.h"
 #include "usr_url.h"
 #include "usr_qry.h"
-#include "queryTerm_Logger.h"
+#include "FileLogger.h"
 
 using namespace std;
 
@@ -37,17 +37,20 @@ int main()
 	usr_url store_usrURL;
 	usr_qry store_usrQry;
 	Processor P;
+	
 	printf("parsing test file\n");
 	dc.parse(PARSE_TEST_FILE);
 	printf("parsing train file\n");
 	dc.parse(PARSE_TRAIN_FILE);
 	dc.wrapUp();
+	
 	printf("processing train\n");
 	P.processTrain(store_usrURL, store_usrQry);
 	printf("processing test\n");
 	P.processTest(store_usrURL, store_usrQry);
 
 	printf("qt logging\n");
-	queryTerm_Logger qt_Logger;
-	qt_Logger.logAll(queryTerms);
+	FileLogger qtLogger(QUERY_TERM_FILE, BUFF_SIZE_QT_FILE, MAX_ROW_2_TERMS);
+	qtLogger.logQT_All(queryTerms);
+	printf("Complete :)\n");
 }
