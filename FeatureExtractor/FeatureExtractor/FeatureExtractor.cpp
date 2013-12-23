@@ -32,7 +32,7 @@ using namespace std;
 
 int main()
 {
-	printf("Starting: All the best!! :)\n");
+	printf("Starting :)\n");
 	DataCollector dc;
 	usr_url store_usrURL;
 	usr_qry store_usrQry;
