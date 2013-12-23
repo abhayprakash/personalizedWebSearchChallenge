@@ -326,7 +326,8 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 							getGroundTruthWhenClicked(logRow, it_query, session_data, i_of_ClickedURL[logRow.url_id]);
 						}
 						// if not clicked class := -1
-						logRow.resultGrade = UNCLICKED_CLASS;
+						else
+							logRow.resultGrade = UNCLICKED_CLASS;
 						
 						if(flag_qualifiesValidation) // validation set
 						{
