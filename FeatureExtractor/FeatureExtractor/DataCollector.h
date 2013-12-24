@@ -12,8 +12,23 @@ using namespace std;
 class DataCollector{
 	char *buffer;
 	unsigned long long buffSize;
+	FILE* fp;
 
+	/***** Temp globals *****/
+	int nRead;
+	string rowInLog;
+	map<int, int> urlRank;
+	int index_q;
+
+	//temp vars
+	int temp_sid, temp_day, temp_time, temp_uid, temp_serp, temp_qid, temp_term, temp_url, temp_domain;
+	string temp_typeOrTime, temp_list, temp_s_term, temp_s_URLDomain, temp_s_URLID;
+	
+	bool considerUser;
+	/************************/
+	
 	FileLogger* duLogger, *suLogger;
+	void processOneFile(int test_1_train_0);
 public:
 	DataCollector(); 
 	void parse(int test_1_train_0);
