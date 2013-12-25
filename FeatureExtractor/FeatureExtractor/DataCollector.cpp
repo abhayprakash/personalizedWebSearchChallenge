@@ -14,16 +14,6 @@ void DataCollector::processOneFile(int test_1_train_0)
 {
 	while((nRead = fread(buffer, 1, buffSize, fp)) > 0)
 	{
-		if(nRead == buffSize)
-		{
-			int movedBack = 0;
-			while(buffer[nRead-1] != '\n')
-			{
-				nRead--;
-				movedBack++;
-			}
-			fseek(fp, -movedBack, SEEK_CUR);
-		}
 		buffer[nRead] = 0;
 		printf("Read a chunk - %d bytes of given file\n", nRead);
 		
@@ -148,11 +138,11 @@ void DataCollector::parse(int test_1_train_0)
 	}
 	else
 	{
-		for(int fileNum = 1; fileNum <= 4; fileNum++)
+		for(int fileNum = 1; fileNum <= 6; fileNum++)
 		{
 			char path[256];
 			strcpy(path, TRAIN_FILE);
-			string append[5] = {"0", "1", "2", "3", "4"};
+			string append[19] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
 			strcat(path, append[fileNum].c_str());
 			printf("opening %s\n", path);
 			fp = fopen(path, "r");
