@@ -243,6 +243,7 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 			store_usrQry.copyLocalToGlobal_and_ClearLocal(i_day);
 			store_usrURL.copyLocalToGlobal_and_ClearLocal(i_day);
 		}
+		RecordOfDay[i_day].clear();
 	}
 }
 
@@ -353,5 +354,6 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 			store_usrQry.copyLocalToGlobal_and_ClearLocal(i_day);
 			store_usrURL.copyLocalToGlobal_and_ClearLocal(i_day);
 		}
+		RecordOfDay[i_day].clear();
 	}
 }
