@@ -4,21 +4,14 @@
 
 void usr_qry::updateShown_userQueries(int uid, int qid, int urlid, int day)
 {
-	if(user_queries.find(uid) == user_queries.end() || user_queries[uid].queryMetadata.find(qid) == user_queries[uid].queryMetadata.end()) // no entry for it
-	{
-		user_queries[uid].queries.push_front(qid);
-		user_queries[uid].queryMetadata[qid].pointerToQID = user_queries[uid].queries.begin();
-		user_queries[uid].queryMetadata[qid].last_time_day = day;
-		user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
-	}
-	else
+	if(user_queries.find(uid) != user_queries.end() && user_queries[uid].queryMetadata.find(qid) != user_queries[uid].queryMetadata.end()) // no entry for it
 	{
 		user_queries[uid].queries.erase(user_queries[uid].queryMetadata[qid].pointerToQID);
-		user_queries[uid].queries.push_front(qid);
-		user_queries[uid].queryMetadata[qid].pointerToQID = user_queries[uid].queries.begin();
-		user_queries[uid].queryMetadata[qid].last_time_day = day;
-		user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
 	}
+	user_queries[uid].queries.push_front(qid);
+	user_queries[uid].queryMetadata[qid].pointerToQID = user_queries[uid].queries.begin();
+	user_queries[uid].queryMetadata[qid].last_time_day = day;
+	user_queries[uid].queryMetadata[qid].urlLastGrade[urlid] = UNCLICKED_CLASS;
 }
 
 void usr_qry::updateClicked_userQueries(int uid, int qid, int urlid, int grade)

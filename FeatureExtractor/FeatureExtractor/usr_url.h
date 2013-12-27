@@ -27,7 +27,7 @@ class usr_url{
 	void updateTable_Click(int uid, int urlid, int grade);
 public:
 	map<int, map<int, rec_url> > table, local;        // <user, url> -> {count, ...}
-													  // local: <usr, url> -> {time, grade}
+													  // local: <usr,url> -> {time, grade} for the usr in current session
 	/*
 	for each session
 	-> for each url
@@ -47,7 +47,7 @@ public:
 	// check exists before calling these
 	// get Before Session params
 	int getCountShown(int uid, int urlid);
-	int getCountR(int uid, int urlid, int grade);
+	void getCountR(int uid, int urlid, int obtained[3]);
 	int getLatestDayGrade(int uid, int urlid);
 	int getLastDay(int uid, int urlid);
 

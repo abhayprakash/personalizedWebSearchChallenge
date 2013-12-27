@@ -3,11 +3,13 @@
 
 void usr_url::updateTable_Shown(int uid, int urlid, int day)
 {
+	/*
 	if(table.find(uid) == table.end() || table[uid].find(urlid) == table[uid].end())
 	{
 		rec_url temp;
 		table[uid][urlid] = temp;
 	}
+	*/
 	table[uid][urlid].count_shown++;
 	table[uid][urlid].last_time_day = day;
 }
@@ -21,11 +23,13 @@ void usr_url::updateTable_Click(int uid, int urlid, int grade)
 
 void usr_url::updateLocal_Shown(int uid, int urlid, int time)
 {
+	/*
 	if(local.find(uid) == local.end() || local[uid].find(urlid) == local[uid].end())
 	{
 		rec_url temp;
 		local[uid][urlid] = temp;
 	}
+	*/
 	local[uid][urlid].last_time_day = time;
 	local[uid][urlid].count_shown++;
 	local[uid][urlid].latest_grade = UNCLICKED_CLASS;
@@ -65,9 +69,11 @@ int usr_url::getCountShown(int uid, int urlid)
 	return table[uid][urlid].count_shown + local[uid][urlid].count_shown;
 }
 
-int usr_url::getCountR(int uid, int urlid, int grade)
+void usr_url::getCountR(int uid, int urlid, int obtained[3])
 {
-	return table[uid][urlid].count_r[grade] + local[uid][urlid].count_r[grade];
+	obtained[0] = table[uid][urlid].count_r[0] + local[uid][urlid].count_r[0];
+	obtained[1] = table[uid][urlid].count_r[1] + local[uid][urlid].count_r[1];
+	obtained[2] = table[uid][urlid].count_r[2] + local[uid][urlid].count_r[2];
 }
 
 int usr_url::getLatestDayGrade(int uid, int urlid)

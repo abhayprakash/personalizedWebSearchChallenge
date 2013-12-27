@@ -55,9 +55,11 @@ void Processor::updateLocal(usr_url &store_usrURL, usr_qry &store_usrQry, rowToL
 void Processor::getGlobalFeatures(rowToLog &logRow, usr_url &store_usrURL) 
 {
 	// store(update) features both global and session : global things
-	logRow.count_earlier_0 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 0);
-	logRow.count_earlier_1 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 1);
-	logRow.count_earlier_2 = store_usrURL.getCountR(logRow.user_id, logRow.url_id, 2);
+	int obtained[3];
+	store_usrURL.getCountR(logRow.user_id, logRow.url_id, obtained);
+	logRow.count_earlier_0 = obtained[0];
+	logRow.count_earlier_1 = obtained[1];
+	logRow.count_earlier_2 = obtained[2];
 	logRow.count_earlier_shown = store_usrURL.getCountShown(logRow.user_id, logRow.url_id);
 }
 
@@ -259,6 +261,7 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 	// temp
 	sessMetaData session_data;
 	int rowsLoggedInTest = 0;
+	map<int, bool> queryInShortContextExists;
 
 	// iterate over days
 	for(int i_day = 28; i_day <= 30; i_day++)
@@ -268,7 +271,7 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 		// itererate over sessions in a day
 		for(map<int, sessMetaData>::iterator it_session = RecordOfDay[i_day].begin(); it_session != RecordOfDay[i_day].end(); ++it_session)
 		{
-			map<int, bool> queryInShortContextExists;
+			queryInShortContextExists.clear();
 			result_Row.session_id = it_session->first;
 			session_data = it_session->second;
 			logRow.user_id = session_data.uid;
@@ -300,7 +303,6 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 						logger_resultMapper.logMap(result_Row);			
 					}
 				}
-				// second last query -> validate
 				else
 				{
 					bool flag_qualifiesValidation = false;
