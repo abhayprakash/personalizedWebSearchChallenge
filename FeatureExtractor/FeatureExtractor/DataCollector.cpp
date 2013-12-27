@@ -6,8 +6,8 @@ DataCollector::DataCollector() // phase I : provide path to train file, phase II
 {
 	buffSize = BUFF_SIZE_INPUT_READ;
 	buffer = (char *)malloc(buffSize);
-	duLogger =  new FileLogger(DOMAIN_URL_FILE, BUFF_SIZE_DU_FILE, MAX_ROW_2_TERMS);
-	suLogger = new FileLogger(SERP_URL_FILE, BUFF_SIZE_SU_FILE, MAX_ROW_2_TERMS);
+//	duLogger =  new FileLogger(DOMAIN_URL_FILE, BUFF_SIZE_DU_FILE, MAX_ROW_2_TERMS);
+//	suLogger = new FileLogger(SERP_URL_FILE, BUFF_SIZE_SU_FILE, MAX_ROW_2_TERMS);
 }
 
 void DataCollector::processOneFile(int test_1_train_0)
@@ -97,8 +97,8 @@ void DataCollector::processOneFile(int test_1_train_0)
 					//temp_sid temp_time temp_serp temp_qid temp_url temp_domain
 					if(considerUser)
 					{
-						duLogger->logDU(temp_domain, temp_url);
-						suLogger->logSU(g_serpid, temp_url); // could have flushed at one time as query-term but maintained the initial design
+//						duLogger->logDU(temp_domain, temp_url);
+//						suLogger->logSU(g_serpid, temp_url); // could have flushed at one time as query-term but maintained the initial design
 						table_serpURLs[g_serpid].push_back(temp_url);
 						urlRank[temp_url] = rank;
 					}
@@ -156,7 +156,7 @@ void DataCollector::parse(int test_1_train_0)
 void DataCollector::wrapUp()
 {
 	free(buffer);
-	duLogger->wrapUp();
-	suLogger->wrapUp();
+//	duLogger->wrapUp();
+//	suLogger->wrapUp();
 	printf("data populated\n");	
 }

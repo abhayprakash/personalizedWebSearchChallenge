@@ -27,7 +27,7 @@ class DataCollector{
 	bool considerUser;
 	/************************/
 	
-	FileLogger* duLogger, *suLogger;
+//	FileLogger* duLogger, *suLogger;
 	void processOneFile(int test_1_train_0);
 public:
 	DataCollector(); 
