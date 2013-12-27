@@ -26,8 +26,8 @@ class usr_url{
 	void updateTable_Shown(int uid, int urlid, int day);
 	void updateTable_Click(int uid, int urlid, int grade);
 public:
-	map<int, map<int, rec_url> > table, local;        // <user, url> -> {count, ...}
-													  // local: <usr,url> -> {time, grade} for the usr in current session
+	map<int, map<int, rec_url> > table;        // <user, url> -> {count, ...}
+	map<int, rec_url>	local;					  // local: <usr,url> -> {time, grade} for the usr in current session
 	/*
 	for each session
 	-> for each url
@@ -36,13 +36,13 @@ public:
 		-> update url record in local
 	-> copy local to global
 	*/
-	void updateLocal_Shown(int uid, int urlid, int time);
-	void updateLocal_Click(int uid, int urlid, int grade);
+	void updateLocal_Shown(int urlid, int time);
+	void updateLocal_Click(int urlid, int grade);
 
-	void copyLocalToGlobal_and_ClearLocal(int day);
+	void copyLocalToGlobal_and_ClearLocal(int day, int uid);
 
 	bool existsBeforeSession(int uid, int urlid);
-	bool existsCurrentSession(int uid, int urlid);
+	bool existsCurrentSession(int urlid);
 
 	// check exists before calling these
 	// get Before Session params
@@ -52,8 +52,8 @@ public:
 	int getLastDay(int uid, int urlid);
 
 	// get Same Session params
-	int getLastTime(int uid, int urlid);
-	int getLatestTimeGrade(int uid, int urlid);
+	int getLastTime(int urlid);
+	int getLatestTimeGrade(int urlid);
 };
 
 #endif

@@ -45,10 +45,10 @@ bool Processor::qualifiesForValidation(vector<queryRec>::iterator it_query, sess
 // expects set logRow.user_id, logRow.url_id, logRow.query_id, logRow.resultGrade
 void Processor::updateLocal(usr_url &store_usrURL, usr_qry &store_usrQry, rowToLog &logRow, int queryTime)
 {
-	store_usrURL.updateLocal_Shown(logRow.user_id, logRow.url_id, queryTime);
-	store_usrQry.updateShown_local(logRow.user_id, logRow.query_id, logRow.url_id, queryTime);
-	store_usrURL.updateLocal_Click(logRow.user_id, logRow.url_id, logRow.resultGrade);
-	store_usrQry.updateClicked_local(logRow.user_id, logRow.query_id, logRow.url_id, logRow.resultGrade);
+	store_usrURL.updateLocal_Shown(logRow.url_id, queryTime);
+	store_usrQry.updateShown_local(logRow.query_id, logRow.url_id, queryTime);
+	store_usrURL.updateLocal_Click(logRow.url_id, logRow.resultGrade);
+	store_usrQry.updateClicked_local(logRow.query_id, logRow.url_id, logRow.resultGrade);
 }
 
 // expects set logRow.user_id, logRow.url_id
@@ -80,12 +80,12 @@ void Processor::getURLRelatedFeatures(rowToLog &logRow, usr_url &store_usrURL, i
 	}
 	
 	// store(update) features local
-	logRow.url_sameSession.exists = store_usrURL.existsCurrentSession(logRow.user_id, logRow.url_id);
-	logRow.url_sameSession.grade = store_usrURL.getLatestTimeGrade(logRow.user_id, logRow.url_id);
+	logRow.url_sameSession.exists = store_usrURL.existsCurrentSession(logRow.url_id);
+	logRow.url_sameSession.grade = store_usrURL.getLatestTimeGrade(logRow.url_id);
 	
 	if(logRow.url_sameSession.exists)
 	{
-		logRow.url_sameSession.time_diff = queryTime - store_usrURL.getLastTime(logRow.user_id, logRow.url_id);
+		logRow.url_sameSession.time_diff = queryTime - store_usrURL.getLastTime(logRow.url_id);
 	}
 	else
 	{
@@ -242,8 +242,8 @@ void Processor::processTrain(usr_url &store_usrURL, usr_qry &store_usrQry)
 				}
 			}
 			// copy local to global
-			store_usrQry.copyLocalToGlobal_and_ClearLocal(i_day);
-			store_usrURL.copyLocalToGlobal_and_ClearLocal(i_day);
+			store_usrQry.copyLocalToGlobal_and_ClearLocal(i_day, logRow.user_id);
+			store_usrURL.copyLocalToGlobal_and_ClearLocal(i_day, logRow.user_id);
 		}
 		RecordOfDay[i_day].clear();
 	}
@@ -328,9 +328,8 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 						{
 							getGroundTruthWhenClicked(logRow, it_query, session_data, i_of_ClickedURL[logRow.url_id]);
 						}
-						// if not clicked class := -1
 						else
-							logRow.resultGrade = UNCLICKED_CLASS;
+							logRow.resultGrade = UNCLICKED_CLASS; // if not clicked class := -1
 						
 						if(flag_qualifiesValidation) // validation set
 						{
@@ -353,8 +352,8 @@ void Processor::processTest(usr_url &store_usrURL, usr_qry &store_usrQry)
 				}
 			}
 			// copy local to global
-			store_usrQry.copyLocalToGlobal_and_ClearLocal(i_day);
-			store_usrURL.copyLocalToGlobal_and_ClearLocal(i_day);
+			store_usrQry.copyLocalToGlobal_and_ClearLocal(i_day, logRow.user_id);
+			store_usrURL.copyLocalToGlobal_and_ClearLocal(i_day, logRow.user_id);
 		}
 		RecordOfDay[i_day].clear();
 	}

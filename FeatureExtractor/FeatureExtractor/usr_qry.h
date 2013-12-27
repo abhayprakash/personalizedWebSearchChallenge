@@ -28,7 +28,7 @@ class usr_qry{
 	};
 	map<int, query_list> user_queries; // contains all the queries of the user before session
 
-	map<int, query_list> local_user_queries; // contains the queries of the user in current session
+	query_list local_user_queries; // contains the queries of the user in current session
 	/*
 	for each session
 	-> for each query
@@ -40,9 +40,9 @@ class usr_qry{
 	void updateShown_userQueries(int uid, int qid, int urlid, int day);
 	void updateClicked_userQueries(int uid, int qid, int urlid, int grade);
 public:
-	void updateShown_local(int uid, int qid, int urlid, int time);
-	void updateClicked_local(int uid, int qid, int urlid, int grade);
-	void copyLocalToGlobal_and_ClearLocal(int day);
+	void updateShown_local(int qid, int urlid, int time);
+	void updateClicked_local(int qid, int urlid, int grade);
+	void copyLocalToGlobal_and_ClearLocal(int day, int uid);
 	bool getRecentSimilarQueryData(int session_or_day, int uid, int actual_qid, int urlid, int &time_or_day, bool &URLshown, int &grade_that_time); // it will return the data for nearest qid qualifying similarity criteria with true, false if doesn't exist
 	int getOldestQueryDay(int uid);
 };

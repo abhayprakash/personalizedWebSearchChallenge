@@ -21,7 +21,7 @@ void usr_url::updateTable_Click(int uid, int urlid, int grade)
 	table[uid][urlid].count_r[grade]++;
 }
 
-void usr_url::updateLocal_Shown(int uid, int urlid, int time)
+void usr_url::updateLocal_Shown(int urlid, int time)
 {
 	/*
 	if(local.find(uid) == local.end() || local[uid].find(urlid) == local[uid].end())
@@ -30,34 +30,31 @@ void usr_url::updateLocal_Shown(int uid, int urlid, int time)
 		local[uid][urlid] = temp;
 	}
 	*/
-	local[uid][urlid].last_time_day = time;
-	local[uid][urlid].count_shown++;
-	local[uid][urlid].latest_grade = UNCLICKED_CLASS;
+	local[urlid].last_time_day = time;
+	local[urlid].count_shown++;
+	local[urlid].latest_grade = UNCLICKED_CLASS;
 }
 
-void usr_url::updateLocal_Click(int uid, int urlid, int grade)
+void usr_url::updateLocal_Click(int urlid, int grade)
 {
-	local[uid][urlid].latest_grade = grade;
-	local[uid][urlid].count_r[grade]++;
+	local[urlid].latest_grade = grade;
+	local[urlid].count_r[grade]++;
 }
 
-void usr_url::copyLocalToGlobal_and_ClearLocal(int day)
+void usr_url::copyLocalToGlobal_and_ClearLocal(int day, int uid)
 {
-	map<int, map<int, rec_url> >::iterator it;
-	map<int, rec_url>::iterator it2;
+	map<int, rec_url>::iterator it;
+
 	for(it = local.begin(); it != local.end(); ++it)
 	{
-		for(it2 = it->second.begin(); it2 != it->second.end(); ++it2)
-		{
-			updateTable_Shown(it->first, it2->first, day);
-		}
+		updateTable_Shown(uid, it->first, day);
 	}
 	local.clear();
 }
 
 bool usr_url::existsBeforeSession(int uid, int urlid)
 {
-	if(table.find(uid) == table.end() || table[uid].find(urlid) == table[uid].end())
+	if(table[uid].find(urlid) == table[uid].end())
 		return false;
 	return true;
 }
@@ -66,14 +63,14 @@ bool usr_url::existsBeforeSession(int uid, int urlid)
 // so before using them check exists(...) 
 int usr_url::getCountShown(int uid, int urlid)
 {
-	return table[uid][urlid].count_shown + local[uid][urlid].count_shown;
+	return table[uid][urlid].count_shown + local[urlid].count_shown;
 }
 
 void usr_url::getCountR(int uid, int urlid, int obtained[3])
 {
-	obtained[0] = table[uid][urlid].count_r[0] + local[uid][urlid].count_r[0];
-	obtained[1] = table[uid][urlid].count_r[1] + local[uid][urlid].count_r[1];
-	obtained[2] = table[uid][urlid].count_r[2] + local[uid][urlid].count_r[2];
+	obtained[0] = table[uid][urlid].count_r[0] + local[urlid].count_r[0];
+	obtained[1] = table[uid][urlid].count_r[1] + local[urlid].count_r[1];
+	obtained[2] = table[uid][urlid].count_r[2] + local[urlid].count_r[2];
 }
 
 int usr_url::getLatestDayGrade(int uid, int urlid)
@@ -87,19 +84,19 @@ int usr_url::getLastDay(int uid, int urlid)
 }
 
 // local ds and operations
-bool usr_url::existsCurrentSession(int uid, int urlid)
+bool usr_url::existsCurrentSession(int urlid)
 {
-	if(local.find(uid) == local.end() || local[uid].find(urlid) == local[uid].end())
+	if(local.find(urlid) == local.end())
 		return false;
 	return true;
 }
 
-int usr_url::getLastTime(int uid, int urlid)
+int usr_url::getLastTime(int urlid)
 {
-	return local[uid][urlid].last_time_day;
+	return local[urlid].last_time_day;
 }
 
-int usr_url::getLatestTimeGrade(int uid, int urlid)
+int usr_url::getLatestTimeGrade(int urlid)
 {
-	return local[uid][urlid].latest_grade;
+	return local[urlid].latest_grade;
 }
