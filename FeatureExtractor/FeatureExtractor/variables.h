@@ -51,6 +51,6 @@ extern unsigned long long BUFF_SIZE_VALIDATE_RESULT;
 #define SIMILAR_INDEX_THRESH_FOR_QUERY 0.75
 #define UNCLICKED_CLASS -1 // make one submission with this value = 0 also
 #define RAND_SEED 25 // or make if time(0), kept it constant to make results reproducible 
-#define PROB_KEEP_UNCLICKED_URL 10
+#define PROB_KEEP_UNCLICKED_URL 5
 
 #endif // VARIABLES_H_INCLUDED

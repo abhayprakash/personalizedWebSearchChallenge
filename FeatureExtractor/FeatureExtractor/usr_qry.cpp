@@ -62,13 +62,18 @@ void usr_qry::copyLocalToGlobal_and_ClearLocal(int day)
 // it will return the data for nearest qid qualifying similarity criteria with true, false if doesn't exist
 bool usr_qry::getRecentSimilarQueryData(int session_or_day, int uid, int actual_qid, int urlid, int &time_or_day, bool &URLshown, int &grade_that_time)
 {
+	int checkedQueries;
 	list<int>::iterator it;
 	int matchThisQuery, count;
 	map<int, bool> q1_has_term;
 	if(session_or_day == SEARCH_IN_SESSION)
 	{
+		checkedQueries = 0;
 		for(it = local_user_queries[uid].queries.begin(); it != local_user_queries[uid].queries.end(); ++it)
 		{
+			checkedQueries++;
+			if(checkedQueries == 11)
+				break;
 			matchThisQuery = *it;
 			count = 0;
 			q1_has_term.clear();
@@ -104,8 +109,12 @@ bool usr_qry::getRecentSimilarQueryData(int session_or_day, int uid, int actual_
 	}
 	else
 	{
+		checkedQueries = 0;
 		for(it = user_queries[uid].queries.begin(); it != user_queries[uid].queries.end(); ++it)
 		{
+			checkedQueries++;
+			if(checkedQueries == 11)
+				break;
 			matchThisQuery = *it;
 			count = 0;
 			q1_has_term.clear();
