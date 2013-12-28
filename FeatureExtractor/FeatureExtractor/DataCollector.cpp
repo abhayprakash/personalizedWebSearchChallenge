@@ -138,7 +138,7 @@ void DataCollector::parse(int test_1_train_0)
 	}
 	else
 	{
-		for(int fileNum = 1; fileNum <= 6; fileNum++)
+		for(int fileNum = 1; fileNum <= 10; fileNum++)
 		{
 			char path[256];
 			strcpy(path, TRAIN_FILE);
