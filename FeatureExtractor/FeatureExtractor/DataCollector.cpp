@@ -12,6 +12,8 @@ DataCollector::DataCollector() // phase I : provide path to train file, phase II
 
 void DataCollector::collectTestUserList()
 {
+	printf("opening %s\n", TEST_FILE);
+	fp = fopen(TEST_FILE, "r");
 	while((nRead = fread(buffer, 1, buffSize, fp)) > 0)
 	{
 		buffer[nRead] = 0;
@@ -64,6 +66,7 @@ void DataCollector::processOneFile(int test_1_train_0)
 					prev_uid = temp_uid;
 					RecordOfUser = NULL;
 				}
+				RecordOfUser = new userData;
 				// temp_sid, temp_day, temp_uid
 				if(userExistsInTest[temp_uid])
 				{

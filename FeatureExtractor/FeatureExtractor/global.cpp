@@ -3,7 +3,7 @@
 
 
 int g_serpid = 0;
-map<int, bool> usersInTest;
+map<int, bool> userExistsInTest;
 map<int, vector<int> > queryTerms;
 map<int, vector<int> > table_serpURLs;
 usr_url store_usrURL;
