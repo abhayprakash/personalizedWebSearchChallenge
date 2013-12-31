@@ -6,8 +6,6 @@ DataCollector::DataCollector() // phase I : provide path to train file, phase II
 {
 	buffSize = BUFF_SIZE_INPUT_READ;
 	buffer = (char *)malloc(buffSize);
-	prev_uid = 0;
-	considerUser = false;
 }
 
 void DataCollector::collectTestUserList()
@@ -64,9 +62,8 @@ void DataCollector::processOneFile(int test_1_train_0)
 					else
 						P.processTrain(RecordOfUser);
 					prev_uid = temp_uid;
-					RecordOfUser = NULL;
+					RecordOfUser = new userData;
 				}
-				RecordOfUser = new userData;
 				// temp_sid, temp_day, temp_uid
 				if(userExistsInTest[temp_uid])
 				{
@@ -147,8 +144,12 @@ void DataCollector::processOneFile(int test_1_train_0)
 
 void DataCollector::parse(int test_1_train_0)
 {
+	considerUser = false;
+	RecordOfUser = new userData;
+
 	if(test_1_train_0)
 	{
+		considerUser = false;
 		printf("opening %s\n", TEST_FILE);
 		fp = fopen(TEST_FILE, "r");
 		processOneFile(test_1_train_0);
@@ -169,6 +170,16 @@ void DataCollector::parse(int test_1_train_0)
 			fclose(fp);
 		}
 		printf("train file parsing complete\n");
+	}
+
+	if(considerUser == true)
+	{
+		if(test_1_train_0)
+			P.processTest(RecordOfUser); // other side just for safety keep a check for null
+		else
+			P.processTrain(RecordOfUser);
+		prev_uid = temp_uid;
+		RecordOfUser = NULL;
 	}
 }
 
