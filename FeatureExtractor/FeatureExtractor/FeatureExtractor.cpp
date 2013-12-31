@@ -34,21 +34,14 @@ int main()
 {
 	printf("Starting :)\n");
 	DataCollector dc;
-	usr_url store_usrURL;
-	usr_qry store_usrQry;
-	Processor P;
 	
-	printf("parsing test file\n");
-	dc.parse(PARSE_TEST_FILE);
+	dc.collectTestUserList();
 	printf("parsing train file\n");
 	dc.parse(PARSE_TRAIN_FILE);
+	printf("parsing test file\n");
+	dc.parse(PARSE_TEST_FILE);
 	dc.wrapUp();
 	
-	printf("processing train\n");
-	P.processTrain(store_usrURL, store_usrQry);
-	printf("processing test\n");
-	P.processTest(store_usrURL, store_usrQry);
-
 	printf("qt logging\n");
 	FileLogger qtLogger(QUERY_TERM_FILE, BUFF_SIZE_QT_FILE, MAX_ROW_2_TERMS);
 	qtLogger.logQT_All(queryTerms);

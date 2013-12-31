@@ -6,8 +6,30 @@ DataCollector::DataCollector() // phase I : provide path to train file, phase II
 {
 	buffSize = BUFF_SIZE_INPUT_READ;
 	buffer = (char *)malloc(buffSize);
-//	duLogger =  new FileLogger(DOMAIN_URL_FILE, BUFF_SIZE_DU_FILE, MAX_ROW_2_TERMS);
-//	suLogger = new FileLogger(SERP_URL_FILE, BUFF_SIZE_SU_FILE, MAX_ROW_2_TERMS);
+	prev_uid = 0;
+	considerUser = false;
+}
+
+void DataCollector::collectTestUserList()
+{
+	while((nRead = fread(buffer, 1, buffSize, fp)) > 0)
+	{
+		buffer[nRead] = 0;
+		printf("Read a chunk - %d bytes of given file\n", nRead);
+		
+		istringstream buff_in(buffer);
+		string testForM;
+		while(buff_in)
+		{
+			buff_in>>testForM;
+			if(testForM == "M")
+			{
+				buff_in>>temp_day>>temp_uid;
+				userExistsInTest[temp_uid] = true;
+			}
+		}
+	}
+	printf("Test Users' list collected\n");
 }
 
 void DataCollector::processOneFile(int test_1_train_0)
@@ -33,23 +55,26 @@ void DataCollector::processOneFile(int test_1_train_0)
 			if(temp_typeOrTime == "M")
 			{
 				sin>>temp_day>>temp_uid;
-				// temp_sid, temp_day, temp_uid
-				if(test_1_train_0)
+				if(temp_uid != prev_uid && considerUser == true)
 				{
-					usersInTest[temp_uid] = true;
+					if(test_1_train_0)
+						P.processTest(RecordOfUser); // other side just for safety keep a check for null
+					else
+						P.processTrain(RecordOfUser);
+					prev_uid = temp_uid;
+					RecordOfUser = NULL;
+				}
+				// temp_sid, temp_day, temp_uid
+				if(userExistsInTest[temp_uid])
+				{
 					considerUser = true;
+					RecordOfUser->uid = temp_uid;
+					index_session = RecordOfUser->session.size();
+					RecordOfUser->session.push_back(sessMetaData(temp_day, temp_sid));
 				}
 				else
 				{
-					if(usersInTest[temp_uid])
-						considerUser = true;
-					else
-						considerUser = false;
-				}
-				if(considerUser)
-				{
-					//userDaySessions[temp_uid].push_back(daySession(temp_day, temp_sid));
-					RecordOfDay[temp_day][temp_sid].uid = temp_uid;
+					considerUser = false;
 				}
 				continue;
 			}
@@ -62,17 +87,13 @@ void DataCollector::processOneFile(int test_1_train_0)
 				//temp_sid temp_time temp_serp temp_qid
 				if(considerUser)
 				{
-					RecordOfDay[temp_day][temp_sid].queries.push_back(queryRec());
-					index_q = RecordOfDay[temp_day][temp_sid].queries.size() - 1;
-					RecordOfDay[temp_day][temp_sid].queries[index_q].qid = temp_qid;
-					RecordOfDay[temp_day][temp_sid].queries[index_q].timeOfQuery = temp_time;
-					RecordOfDay[temp_day][temp_sid].queries[index_q].shownSERP = g_serpid;
+					index_q = RecordOfUser->session[index_session].queries.size();
+					RecordOfUser->session[index_session].queries.push_back(queryRec(temp_qid, temp_time, g_serpid));
 				}
 				sin>>temp_list;
 				istringstream tokenStream(temp_list);
 				while(getline(tokenStream, temp_s_term, ','))
 				{
-					temp_term = atoi(temp_s_term.c_str());
 					//temp_sid temp_time temp_serp temp_qid temp_term
 					/*
 					 * we can keep Queries of worthful users only but i think it will be used to get a separate SOM, so let me keep all queries 
@@ -81,6 +102,7 @@ void DataCollector::processOneFile(int test_1_train_0)
 					 */
 					if(considerUser)
 					{
+						temp_term = atoi(temp_s_term.c_str());
 						queryTerms[temp_qid].push_back(temp_term); 
 					}
 				}
@@ -97,8 +119,6 @@ void DataCollector::processOneFile(int test_1_train_0)
 					//temp_sid temp_time temp_serp temp_qid temp_url temp_domain
 					if(considerUser)
 					{
-//						duLogger->logDU(temp_domain, temp_url);
-//						suLogger->logSU(g_serpid, temp_url); // could have flushed at one time as query-term but maintained the initial design
 						table_serpURLs[g_serpid].push_back(temp_url);
 						urlRank[temp_url] = rank;
 					}
@@ -115,11 +135,7 @@ void DataCollector::processOneFile(int test_1_train_0)
 				// temp_sid temp_time temp_serp temp_url
 				if(considerUser)
 				{
-					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL.push_back(shownURL());
-					int index_u = RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL.size() - 1;
-					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL[index_u].position = urlRank[temp_url];
-					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL[index_u].url_id = temp_url;
-					RecordOfDay[temp_day][temp_sid].queries[index_q].clickedURL[index_u].timeOfClick = temp_time;
+					RecordOfUser->session[index_session].queries[index_q].clickedURL.push_back(shownURL(temp_url, temp_time, urlRank[temp_url]));
 				}
 			}
 		}
@@ -156,7 +172,6 @@ void DataCollector::parse(int test_1_train_0)
 void DataCollector::wrapUp()
 {
 	free(buffer);
-//	duLogger->wrapUp();
-//	suLogger->wrapUp();
-	printf("data populated\n");	
+	P.wrapUp();
+	printf("Feature Files generation complete\n");
 }

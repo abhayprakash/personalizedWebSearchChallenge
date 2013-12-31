@@ -2,6 +2,8 @@
 #define GLOBAL_H_INCLUDED
 
 #include "variables.h"
+#include "usr_url.h"
+#include "usr_qry.h"
 #include <vector>
 #include <map>
 
@@ -10,29 +12,48 @@ using namespace std;
 // id for serp for each query
 extern int g_serpid;
 
-// whether the user has record in test file
-extern map<int, bool> usersInTest;
-
 // query to its terms
 extern map<int, vector<int> > queryTerms;
 
 // g_serpid to its urls
 extern map<int, vector<int> > table_serpURLs;
 
+// whether the user is in test file or not
+extern map<int, bool> userExistsInTest;
+
+// global ds to store temporal features
+extern usr_url store_usrURL;
+extern usr_qry store_usrQry;
+
 // Data Collected in memory : RecordOfDay[]
 struct shownURL{
 	int url_id, timeOfClick, position;
+	shownURL(int u, int t, int p)
+	{
+		url_id = u; timeOfClick = t; position = p;
+	}
 };
 struct queryRec{
 	int qid, timeOfQuery, shownSERP;
 	vector<shownURL> clickedURL;
+	queryRec(int q, int time, int gSerp)
+	{
+		qid = q; timeOfQuery = time; shownSERP = gSerp;
+	}
 };
 struct sessMetaData{
-	int uid; 
+	int day, sessionId; 
 	vector<queryRec> queries;
+	sessMetaData(int d, int sid)
+	{
+		day = d;
+		sessionId = sid;
+	}
 };
-typedef map<int, sessMetaData> sessionRec; // first int is session_id
-extern sessionRec RecordOfDay[31]; // use it as RecordOfDay[day][session_id].{uid|queries[i].{qid|timeOfQuery|clickedURL[i].{urlid|timeOfClick|position}}}
+struct userData{
+	int uid;
+	vector<sessMetaData> session;
+};
 
 // Feature
 struct feature{

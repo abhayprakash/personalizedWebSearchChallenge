@@ -40,6 +40,7 @@ extern unsigned long long BUFF_SIZE_VALIDATE_RESULT;
 #define MAX_ROW_2_TERMS 28
 #define MAX_ROW_MORE_THAN_20_TERMS 192
 #define MAX_ROW_AROUND_10_TERMS 40
+#define NUM_OF_CORES 8
 
 // mutual communication
 #define PARSE_TRAIN_FILE 0
