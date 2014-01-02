@@ -17,7 +17,7 @@ extern char QUERY_TERM_FILE[256];
 extern char RESULT_VALIDATE_FILE[256];
 extern char RESULT_MAPPER_FILE[256];
 
-#define MB_OR_GB 1ull
+#define MB_OR_GB 1024ull
 
 // memory allocation
 extern unsigned long long BUFF_SIZE_INPUT_READ;
@@ -51,7 +51,7 @@ extern unsigned long long BUFF_SIZE_VALIDATE_RESULT;
 // Computation parameters
 #define SIMILAR_INDEX_THRESH_FOR_QUERY 0.75
 #define UNCLICKED_CLASS -1 // make one submission with this value = 0 also
-#define RAND_SEED 25 // or make if time(0), kept it constant to make results reproducible 
+#define RAND_SEED 25 // or make if time(0), kept it constant to make results reproducible
 #define PROB_KEEP_UNCLICKED_URL 5
 
 #endif // VARIABLES_H_INCLUDED

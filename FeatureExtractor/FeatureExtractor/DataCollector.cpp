@@ -169,7 +169,7 @@ void DataCollector::parse(int test_1_train_0)
 	else
 	{
 		Processor::init_train();
-		for(int fileNum = 1; fileNum <= 10; fileNum++)
+		for(int fileNum = 1; fileNum <= 17; fileNum++)
 		{
 			char path[256];
 			strcpy(path, TRAIN_FILE);
