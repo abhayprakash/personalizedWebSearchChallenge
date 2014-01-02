@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "usr_qry.h"
 #include "global.h"
 

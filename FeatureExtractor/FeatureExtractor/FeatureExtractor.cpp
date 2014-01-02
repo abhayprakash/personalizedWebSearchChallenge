@@ -8,7 +8,7 @@ user_id, query_id, url_id,count_earlier_shown,count_earlier_2,count_earlier_1,co
 {similar_query_before_current_session(bool), day_difference_from_most_recent, this_url_shown(bool), grade_that_time},
 grade_this_time
 
-2. 
+2.
 query_id, term_id // iterate over map queryTerms to print all it
 
 3.
@@ -17,7 +17,6 @@ domain_id, url_id // iterate over map domainURLs to print all it
 4.
 serp_id, url_id // iterate over map serpURLs to print all it
 */
-#include "stdafx.h"
 #include <map>
 #include <vector>
 #include "DataCollector.h"
@@ -34,14 +33,14 @@ int main()
 {
 	printf("Starting :)\n");
 	DataCollector dc;
-	
+
 	dc.collectTestUserList();
 	printf("parsing train file\n");
 	dc.parse(PARSE_TRAIN_FILE);
 	printf("parsing test file\n");
 	dc.parse(PARSE_TEST_FILE);
 	dc.wrapUp();
-	
+
 	printf("qt logging\n");
 	FileLogger qtLogger(QUERY_TERM_FILE, BUFF_SIZE_QT_FILE, MAX_ROW_2_TERMS);
 	qtLogger.logQT_All(queryTerms);

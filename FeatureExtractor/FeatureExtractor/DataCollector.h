@@ -1,10 +1,12 @@
 #ifndef DATACOLLECTOR_H_INCLUDED
 #define DATACOLLECTOR_H_INCLUDED
 
-#include "variables.h"
+#include <string.h>
 #include <sstream>
+
 #include "FileLogger.h"
 #include "Processor.h"
+#include "variables.h"
 
 using namespace std;
 
@@ -26,13 +28,13 @@ class DataCollector{
 	int prev_uid, index_session;
 	int temp_sid, temp_day, temp_time, temp_uid, temp_serp, temp_qid, temp_term, temp_url, temp_domain;
 	string temp_typeOrTime, temp_list, temp_s_term, temp_s_URLDomain, temp_s_URLID;
-	
+
 	bool considerUser;
 	/************************/
-	
+
 	void processOneFile(int test_1_train_0);
 public:
-	DataCollector(); 
+	DataCollector();
 	void parse(int test_1_train_0);
 	void wrapUp();
 	void collectTestUserList();

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "DataCollector.h"
 #include "global.h"
 
@@ -16,7 +15,7 @@ void DataCollector::collectTestUserList()
 	{
 		buffer[nRead] = 0;
 		printf("Read a chunk - %d bytes of given file\n", nRead);
-		
+
 		istringstream buff_in(buffer);
 		string testForM;
 		while(buff_in)
@@ -38,7 +37,7 @@ void DataCollector::processOneFile(int test_1_train_0)
 	{
 		buffer[nRead] = 0;
 		printf("Read a chunk - %d bytes of given file\n", nRead);
-		
+
 		// do operation on buffer
 		istringstream buff_in(buffer);
 		int countRow = 0;
@@ -80,7 +79,7 @@ void DataCollector::processOneFile(int test_1_train_0)
 			}
 			temp_time = atoi(temp_typeOrTime.c_str());
 			sin>>temp_typeOrTime;
-			
+
 			if(temp_typeOrTime == "Q" || temp_typeOrTime == "T") // way of identifing T queries: last query of each session with day 28|29|30
 			{
 				sin>>temp_serp>>temp_qid;
@@ -96,14 +95,14 @@ void DataCollector::processOneFile(int test_1_train_0)
 				{
 					//temp_sid temp_time temp_serp temp_qid temp_term
 					/*
-					 * we can keep Queries of worthful users only but i think it will be used to get a separate SOM, so let me keep all queries 
+					 * we can keep Queries of worthful users only but i think it will be used to get a separate SOM, so let me keep all queries
 					 * NOTE: queryid means the TEXTUAL query only
 					 * wait that will cause over 100 Mn rows - do it for worthful users only
 					 */
 					if(considerUser)
 					{
 						temp_term = atoi(temp_s_term.c_str());
-						queryTerms[temp_qid].push_back(temp_term); 
+						queryTerms[temp_qid].push_back(temp_term);
 					}
 				}
 
@@ -154,7 +153,7 @@ void DataCollector::parse(int test_1_train_0)
 		printf("opening %s\n", TEST_FILE);
 		fp = fopen(TEST_FILE, "r");
 		processOneFile(test_1_train_0);
-		
+
 		//process last record
 		if(considerUser == true)
 		{

@@ -4,6 +4,8 @@
 #include "variables.h"
 #include "usr_url.h"
 #include "usr_qry.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <vector>
 #include <map>
 
@@ -42,7 +44,7 @@ struct queryRec{
 	}
 };
 struct sessMetaData{
-	int day, sessionId; 
+	int day, sessionId;
 	vector<queryRec> queries;
 	sessMetaData(int d, int sid)
 	{
@@ -62,7 +64,7 @@ struct feature{
 	int grade;
 
 	bool u_exists_for_q; // use for q_ss and q_bs only
-	
+
 	feature(){
 		exists = false;
 		time_diff = 0;

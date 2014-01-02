@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Processor.h"
 #include "global.h"
 
@@ -45,7 +44,7 @@ bool Processor::qualifiesForValidation(int uid, vector<queryRec>::iterator it_qu
 		return true;
 
 	// statement: "user that asked this query has no search sessions in the training period"
-	// if it has, include in validation set 
+	// if it has, include in validation set
 	// for this check the day of last query in the user's query list if it is <= 27 return true
 	// a little probability of missing: latest day of oldest query may be in test days whereas its first day could be in train time
 	// but this would just miss some cases but not include any wrong one - resulting a bit small validation set that could have been got
@@ -53,7 +52,7 @@ bool Processor::qualifiesForValidation(int uid, vector<queryRec>::iterator it_qu
 	int lastestDayOfOldestQuery = store_usrQry.getOldestQueryDay(uid);
 	if( lastestDayOfOldestQuery > 0 && lastestDayOfOldestQuery <= 27)
 		return true;
-	
+
 	return false;
 }
 
@@ -67,7 +66,7 @@ void Processor::updateLocal(rowToLog &logRow, int queryTime)
 }
 
 // expects set logRow.user_id, logRow.url_id
-void Processor::getGlobalFeatures(rowToLog &logRow) 
+void Processor::getGlobalFeatures(rowToLog &logRow)
 {
 	// store(update) features both global and session : global things
 	int obtained[3];
@@ -79,12 +78,12 @@ void Processor::getGlobalFeatures(rowToLog &logRow)
 }
 
 // expects set logRow.user_id, logRow.url_id
-void Processor::getURLRelatedFeatures(rowToLog &logRow, int queryDay, int queryTime) 
+void Processor::getURLRelatedFeatures(rowToLog &logRow, int queryDay, int queryTime)
 {
 	// store(update) features global
 	logRow.url_beforeSession.exists = store_usrURL.existsBeforeSession(logRow.user_id, logRow.url_id);
 	logRow.url_beforeSession.grade = store_usrURL.getLatestDayGrade(logRow.user_id, logRow.url_id);
-	
+
 	if(logRow.url_beforeSession.exists)
 	{
 		logRow.url_beforeSession.time_diff = queryDay - store_usrURL.getLastDay(logRow.user_id, logRow.url_id);
@@ -93,11 +92,11 @@ void Processor::getURLRelatedFeatures(rowToLog &logRow, int queryDay, int queryT
 	{
 		logRow.url_beforeSession.time_diff = 0;
 	}
-	
+
 	// store(update) features local
 	logRow.url_sameSession.exists = store_usrURL.existsCurrentSession(logRow.url_id);
 	logRow.url_sameSession.grade = store_usrURL.getLatestTimeGrade(logRow.url_id);
-	
+
 	if(logRow.url_sameSession.exists)
 	{
 		logRow.url_sameSession.time_diff = queryTime - store_usrURL.getLastTime(logRow.url_id);
@@ -109,10 +108,10 @@ void Processor::getURLRelatedFeatures(rowToLog &logRow, int queryDay, int queryT
 }
 
 // expects logRow.user_id, logRow.query_id, logRow.url_id
-void Processor::getQueryRelatedFeatures(rowToLog &logRow, int queryDay, int queryTime) 
+void Processor::getQueryRelatedFeatures(rowToLog &logRow, int queryDay, int queryTime)
 {
 	int time_day_of_found_query;
-	
+
 	// store(update) features global
 	if(store_usrQry.getRecentSimilarQueryData(SEARCH_BEFORE_SESSION, logRow.user_id, logRow.query_id, logRow.url_id, time_day_of_found_query, logRow.query_beforeSession.u_exists_for_q, logRow.query_beforeSession.grade))
 	{
@@ -147,29 +146,29 @@ void Processor::getGroundTruthWhenClicked(rowToLog &logRow, vector<queryRec>::it
 {
 	int timeGivenOnURL, time_nextActivity;
 	// if last click of session
-	if(it_query+1 == it_session->queries.end() && i_qClickedUrl+1 == it_query->clickedURL.size()) 
+	if(it_query+1 == it_session->queries.end() && i_qClickedUrl+1 == it_query->clickedURL.size())
 	{
 		timeGivenOnURL = 404; // a dummy value greater than 400
 	}
 	// if last click of query
-	else if(i_qClickedUrl+1 == it_query->clickedURL.size()) 
+	else if(i_qClickedUrl+1 == it_query->clickedURL.size())
 	{
 		time_nextActivity = (it_query+1)->timeOfQuery;
 		timeGivenOnURL = time_nextActivity - it_query->clickedURL[i_qClickedUrl].timeOfClick;
 	}
 	// same query has next click
-	else 
+	else
 	{
 		time_nextActivity = it_query->clickedURL[i_qClickedUrl+1].timeOfClick;
 		timeGivenOnURL = time_nextActivity - it_query->clickedURL[i_qClickedUrl].timeOfClick;
 	}
 
 	logRow.resultGrade = 0;
-	if( timeGivenOnURL >= 50) 
+	if( timeGivenOnURL >= 50)
 	{
 		logRow.resultGrade = 1;
 	}
-	if( timeGivenOnURL >= 400) 
+	if( timeGivenOnURL >= 400)
 	{
 		logRow.resultGrade = 2;
 	}
@@ -183,7 +182,7 @@ void Processor::processTrain(userData* RecordOfUser)
 
 	rowToLog logRow;
 	logRow.user_id = RecordOfUser->uid;
-	
+
 	// temp
 	map<int, bool> url_logged;
 	srand(RAND_SEED);
@@ -210,7 +209,7 @@ void Processor::processTrain(userData* RecordOfUser)
 				getURLRelatedFeatures(logRow, it_session->day, it_query->timeOfQuery);
 				getQueryRelatedFeatures(logRow, it_session->day, it_query->timeOfQuery);
 
-				
+
 				getGroundTruthWhenClicked(logRow, it_query, it_session, i_qClickedUrl);
 
 				// log and mark logged
@@ -273,7 +272,7 @@ void Processor::processTest(userData* RecordOfUser)
 	{
 		queryInShortContextExists.clear();
 		result_Row.session_id = it_session->sessionId;
-		
+
 		//iterate over queries in a session
 		for(vector<queryRec>::iterator it_query = it_session->queries.begin(); it_query != it_session->queries.end(); ++it_query)
 		{
@@ -295,11 +294,11 @@ void Processor::processTest(userData* RecordOfUser)
 
 					// log row in test file
 					logger_feature_test->logTest(logRow);
-						
+
 					result_Row.rowNum = rowsLoggedInTest;
 					rowsLoggedInTest++;
 					// log in result mapper so as to output session_id and URLid(ordered by class and urlpos)
-					logger_resultMapper->logMap(result_Row);			
+					logger_resultMapper->logMap(result_Row);
 				}
 			}
 			else
@@ -321,7 +320,7 @@ void Processor::processTest(userData* RecordOfUser)
 				for(unsigned int i_serpurl = 0; i_serpurl < table_serpURLs[it_query->shownSERP].size(); ++i_serpurl) // all 10 url even for non clicked
 				{
 					logRow.url_id = table_serpURLs[it_query->shownSERP][i_serpurl];
-						
+
 					// if clicked, get class
 					if(i_of_ClickedURL.find(logRow.url_id) != i_of_ClickedURL.end())
 					{
@@ -329,11 +328,11 @@ void Processor::processTest(userData* RecordOfUser)
 					}
 					else
 						logRow.resultGrade = UNCLICKED_CLASS; // if not clicked class := -1
-						
+
 					if(flag_qualifiesValidation) // validation set
 					{
 						logRow.url_position = i_serpurl + 1;
-						
+
 						// get features
 						getGlobalFeatures(logRow);
 						getURLRelatedFeatures(logRow, it_session->day, it_query->timeOfQuery);
@@ -347,7 +346,7 @@ void Processor::processTest(userData* RecordOfUser)
 					}
 					//update local
 					updateLocal(logRow, it_query->timeOfQuery);
-				}					
+				}
 			}
 		}
 		// copy local to global
