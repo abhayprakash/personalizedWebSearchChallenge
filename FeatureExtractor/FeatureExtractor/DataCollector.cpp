@@ -58,9 +58,9 @@ void DataCollector::processOneFile(int test_1_train_0)
 				if(temp_uid != prev_uid && considerUser == true)
 				{
 					if(test_1_train_0)
-						P.processTest(RecordOfUser); // other side just for safety keep a check for null
+						Processor::processTest(RecordOfUser); // other side just for safety keep a check for null
 					else
-						P.processTrain(RecordOfUser);
+						Processor::processTrain(RecordOfUser);
 					prev_uid = temp_uid;
 					RecordOfUser = new userData;
 				}
@@ -149,15 +149,27 @@ void DataCollector::parse(int test_1_train_0)
 
 	if(test_1_train_0)
 	{
+		Processor::init_test();
 		considerUser = false;
 		printf("opening %s\n", TEST_FILE);
 		fp = fopen(TEST_FILE, "r");
 		processOneFile(test_1_train_0);
+		
+		//process last record
+		if(considerUser == true)
+		{
+			Processor::processTest(RecordOfUser);
+			prev_uid = temp_uid;
+			RecordOfUser = NULL;
+		}
+
 		printf("test file parsing complete\n");
+		Processor::wrapUp_test();
 		fclose(fp);
 	}
 	else
 	{
+		Processor::init_train();
 		for(int fileNum = 1; fileNum <= 10; fileNum++)
 		{
 			char path[256];
@@ -169,23 +181,19 @@ void DataCollector::parse(int test_1_train_0)
 			processOneFile(test_1_train_0);
 			fclose(fp);
 		}
+		if(considerUser == true)
+		{
+			Processor::processTrain(RecordOfUser);
+			prev_uid = temp_uid;
+			RecordOfUser = NULL;
+		}
+		Processor::wrapUp_train();
 		printf("train file parsing complete\n");
-	}
-
-	if(considerUser == true)
-	{
-		if(test_1_train_0)
-			P.processTest(RecordOfUser); // other side just for safety keep a check for null
-		else
-			P.processTrain(RecordOfUser);
-		prev_uid = temp_uid;
-		RecordOfUser = NULL;
 	}
 }
 
 void DataCollector::wrapUp()
 {
 	free(buffer);
-	P.wrapUp();
 	printf("Feature Files generation complete\n");
 }

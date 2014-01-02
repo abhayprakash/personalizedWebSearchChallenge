@@ -14,7 +14,6 @@ class DataCollector{
 	unsigned long long buffSize;
 	FILE* fp;
 
-	Processor P;
 	userData* RecordOfUser;
 
 	/***** Temp globals *****/

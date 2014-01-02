@@ -18,9 +18,15 @@ for each session
 	-> copy local to global
 */
 
-Processor::Processor()
+FileLogger* logger_feature_train, *logger_feature_test, *logger_resultMapper, *logger_feature_validate, *logger_validate_result;
+
+void Processor::init_train()
 {
 	logger_feature_train = new FileLogger(FEATURE_TRAIN_FILE, BUFF_SIZE_FEATURE_TRAIN_FILE, MAX_ROW_MORE_THAN_20_TERMS);
+}
+
+void Processor::init_test()
+{
 	logger_feature_test = new FileLogger(FEATURE_TEST_PHASE_FILE, BUFF_SIZE_FEATURE_TEST_FILE, MAX_ROW_MORE_THAN_20_TERMS);
 	logger_resultMapper = new FileLogger(RESULT_MAPPER_FILE, BUFF_SIZE_RESULT_MAPPER, MAX_ROW_AROUND_10_TERMS);
 	logger_feature_validate = new FileLogger(FEATURE_VALIDATE_PHASE_FILE, BUFF_SIZE_VALIDATE_FILE, MAX_ROW_MORE_THAN_20_TERMS);
@@ -351,9 +357,13 @@ void Processor::processTest(userData* RecordOfUser)
 	delete RecordOfUser;
 }
 
-void Processor::wrapUp()
+void Processor::wrapUp_train()
 {
 	logger_feature_train->wrapUp();
+}
+
+void Processor::wrapUp_test()
+{
 	logger_feature_test->wrapUp();
 	logger_resultMapper->wrapUp();
 	logger_feature_validate->wrapUp();
