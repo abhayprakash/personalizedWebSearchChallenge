@@ -5,6 +5,7 @@ DataCollector::DataCollector() // phase I : provide path to train file, phase II
 {
 	buffSize = BUFF_SIZE_INPUT_READ;
 	buffer = (char *)malloc(buffSize);
+	prev_uid = 0;
 }
 
 void DataCollector::collectTestUserList()
@@ -29,6 +30,24 @@ void DataCollector::collectTestUserList()
 		}
 	}
 	printf("Test Users' list collected\n");
+}
+
+void printDebug(userData* R)
+{
+    printf("UID %d\n",R->uid);
+    for(int i = 0; i < R->session.size(); i++)
+    {
+        printf("day %d\n",R->session[i].day);
+        printf("sessionId %d\n",R->session[i].sessionId);
+        for(int j = 0; j < R->session[i].queries.size(); j++)
+        {
+            printf("\tqid %d\n",R->session[i].queries[j].qid);
+            for(int k = 0; k < R->session[i].queries[j].clickedURL.size(); k++)
+            {
+                printf("\t\tCurlid %d\n",R->session[i].queries[j].clickedURL[k].url_id);
+            }
+        }
+    }
 }
 
 void DataCollector::processOneFile(int test_1_train_0)
@@ -56,7 +75,7 @@ void DataCollector::processOneFile(int test_1_train_0)
 				sin>>temp_day>>temp_uid;
 				if(temp_uid != prev_uid && considerUser == true)
 				{
-					if(test_1_train_0)
+				    if(test_1_train_0)
 						Processor::processTest(RecordOfUser); // other side just for safety keep a check for null
 					else
 						Processor::processTrain(RecordOfUser);
@@ -169,11 +188,11 @@ void DataCollector::parse(int test_1_train_0)
 	else
 	{
 		Processor::init_train();
-		for(int fileNum = 1; fileNum <= 17; fileNum++)
+		string append[19] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
+		for(int fileNum = 1; fileNum <= 10; fileNum++)
 		{
 			char path[256];
 			strcpy(path, TRAIN_FILE);
-			string append[19] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
 			strcat(path, append[fileNum].c_str());
 			printf("opening %s\n", path);
 			fp = fopen(path, "r");

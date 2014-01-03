@@ -174,8 +174,31 @@ void Processor::getGroundTruthWhenClicked(rowToLog &logRow, vector<queryRec>::it
 	}
 }
 
+void printLocalDebug(userData* R)
+{
+    printf("DEBUG***********************************************************************\n");
+    printf("UID %d\n",R->uid);
+    for(int i = 0; i < R->session.size(); i++)
+    {
+        printf("day %d\n",R->session[i].day);
+        printf("sessionId %d\n",R->session[i].sessionId);
+        for(int j = 0; j < R->session[i].queries.size(); j++)
+        {
+            printf("\tqid %d\n",R->session[i].queries[j].qid);
+            for(int k = 0; k < R->session[i].queries[j].clickedURL.size(); k++)
+            {
+                printf("\t\tCurlid %d\n",R->session[i].queries[j].clickedURL[k].url_id);
+            }
+        }
+    }
+    printf("DEBUG********************************* OVER *********************************\n");
+}
+
 void Processor::processTrain(userData* RecordOfUser)
 {
+    //printf("obtained record:\n");
+    //printLocalDebug(RecordOfUser);
+
 	// just a precaution that RE not arise
 	if(RecordOfUser == NULL)
 		return;
@@ -186,13 +209,19 @@ void Processor::processTrain(userData* RecordOfUser)
 	// temp
 	map<int, bool> url_logged;
 	srand(RAND_SEED);
-
+    //printf("Processing Data:\n");
 	// iteration over sessions
 	for(vector<sessMetaData>::iterator it_session = RecordOfUser->session.begin(); it_session != RecordOfUser->session.end(); ++it_session)
 	{
+	    //printf("session %d\n", it_session->sessionId);
+	    //printf("day %d\n", it_session->day);
 		//iteration over queries in a session
-		for(vector<queryRec>::iterator it_query = it_session->queries.begin(); it_query != it_session->queries.end() && it_query->clickedURL.size() != 0 ; ++it_query)
+		for(vector<queryRec>::iterator it_query = it_session->queries.begin(); it_query != it_session->queries.end(); ++it_query)
 		{
+		    if(it_query->clickedURL.size() == 0) // put this condition after debugging
+                continue;
+
+		    //printf("\tqid %d\n", it_query->qid);
 			url_logged.clear();
 			logRow.query_id = it_query->qid;
 
@@ -200,6 +229,7 @@ void Processor::processTrain(userData* RecordOfUser)
 			// operation for clicked urls
 			for(unsigned int i_qClickedUrl = 0; i_qClickedUrl < it_query->clickedURL.size(); ++i_qClickedUrl)
 			{
+			    //printf("\t\tCurlid %d\n", it_query->clickedURL[i_qClickedUrl].url_id);
 				logRow.url_id = it_query->clickedURL[i_qClickedUrl].url_id;
 				logRow.url_position = it_query->clickedURL[i_qClickedUrl].position;
 
