@@ -31,7 +31,7 @@ using namespace std;
 
 int main()
 {
-	printf("Starting :)\n");
+	printf("Starting II :)\n");
 	DataCollector dc;
 
 	dc.collectTestUserList();
