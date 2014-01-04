@@ -31,7 +31,7 @@ using namespace std;
 
 int main()
 {
-	printf("Starting II :)\n");
+	printf("Starting (17 files) :)\n");
 	DataCollector dc;
 
 	dc.collectTestUserList();
@@ -40,11 +40,11 @@ int main()
 	printf("parsing test file\n");
 	dc.parse(PARSE_TEST_FILE);
 	dc.wrapUp();
-/*
+
     // we already have it
 	printf("qt logging\n");
 	FileLogger qtLogger(QUERY_TERM_FILE, BUFF_SIZE_QT_FILE, MAX_ROW_2_TERMS);
 	qtLogger.logQT_All(queryTerms);
-*/
+
 	printf("Complete :)\n");
 }
