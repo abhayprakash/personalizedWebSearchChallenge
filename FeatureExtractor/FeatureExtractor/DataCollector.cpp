@@ -189,7 +189,7 @@ void DataCollector::parse(int test_1_train_0)
 	{
 		Processor::init_train();
 		string append[19] = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
-		for(int fileNum = 1; fileNum <= 10; fileNum++)
+		for(int fileNum = 1; fileNum <= 17; fileNum++)
 		{
 			char path[256];
 			strcpy(path, TRAIN_FILE);
