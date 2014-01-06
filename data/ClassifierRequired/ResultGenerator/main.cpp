@@ -3,19 +3,34 @@
 #include "FileLogger.h"
 #include <algorithm>
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
 struct answerRow{
-    int sid, urlid, pos, result;
+    int sid, urlid, pos, result_class;
+    double result[4];
+    void getClass()
+    {
+        result_class = 0;
+        double mx = result[0];
+        for(int i = 0; i < 4; i++)
+        {
+            if(mx <= result[i])
+            {
+                mx = result[i];
+                result_class = i;
+            }
+        }
+    }
 };
 
 bool myfn(answerRow i, answerRow j)
 {
-    if(i.result > j.result)
+    if(i.result_class > j.result_class)
         return true;
 
-    if(i.result == j.result)
+    if(i.result_class == j.result_class)
         if(i.pos < j.pos)
             return true;
 
@@ -95,8 +110,11 @@ int main()
                 iteration++;
             }
             //cout<<endl;
-            result_in>>shownURL[i].result;
-
+            for(int j = 0; j < 4; j++)
+            {
+                result_in>>shownURL[i].result[j];
+            }
+            shownURL[i].getClass();
             //cout<<"Originally:\n";
             //cout<<shownURL[i].sid<<"-------"<<shownURL[i].urlid<<"------"<<shownURL[i].result<<"-----"<<shownURL[i].pos<<endl;
         }

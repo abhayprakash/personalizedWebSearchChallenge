@@ -20,7 +20,7 @@ system.time(gbmModel<-gbm( train_data$V23 ~ .
 
 test_data <- read.csv("/home/abhay/personalizedWebSearchChallenge/data/ClassifierRequired/Result_allQueries/feature_test.txt",head=F,sep=",")
 
-results<-predict(gbmModel,newdata = test_data,n.trees=gbmModel$n.trees,type="response"
+results<-predict(gbmModel,newdata = test_data,n.trees=gbmModel$n.trees,type="response")
 
 write(results, 
 	file = "predicted_result",
