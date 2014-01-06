@@ -64,88 +64,51 @@ bool usr_qry::getRecentSimilarQueryData(int session_or_day, int uid, int actual_
 	map<int, bool> q1_has_term;
 	if(session_or_day == SEARCH_IN_SESSION)
 	{
-		//checkedQueries = 0;
-		for(it = local_user_queries.queries.begin(); it != local_user_queries.queries.end(); ++it)
-		{
-		    /*
-			checkedQueries++;
-			if(checkedQueries == 11)
-				break;
-			*/
-			matchThisQuery = *it;
-			count = 0;
-			q1_has_term.clear();
-			for(unsigned int i = 0; i < queryTerms[matchThisQuery].size(); ++i)
-			{
-				q1_has_term[queryTerms[matchThisQuery][i]] = true;
-			}
-			for(unsigned int i = 0; i < queryTerms[actual_qid].size(); ++i)
-			{
-				if(q1_has_term[queryTerms[actual_qid][i]])
-				{
-					count++;
-				}
-			}
-			if(count >= SIMILAR_INDEX_THRESH_FOR_QUERY * queryTerms[actual_qid].size())
-			{
-				// matchThisQuery has qualified
-				time_or_day = local_user_queries.queryMetadata[matchThisQuery].last_time_day;
-				if(local_user_queries.queryMetadata[matchThisQuery].urlLastGrade.find(urlid) != local_user_queries.queryMetadata[matchThisQuery].urlLastGrade.end())
-				{
-					URLshown = true;
-					grade_that_time = local_user_queries.queryMetadata[matchThisQuery].urlLastGrade[urlid];
-				}
-				else
-				{
-					URLshown = false;
-					grade_that_time = 0;
-				}
-				return true;
-			}
-		}
-		return false;
+		if(local_user_queries.queryMetadata.find(actual_qid) == local_user_queries.queryMetadata.end())
+        {
+            time_or_day = 0;
+            URLshown = false;
+            grade_that_time = UNCLICKED_CLASS;
+            return false;
+        }
+        else
+        {
+            time_or_day = local_user_queries.queryMetadata[actual_qid].last_time_day;
+            if(local_user_queries.queryMetadata[actual_qid].urlLastGrade.find(urlid) == local_user_queries.queryMetadata[actual_qid].urlLastGrade.end())
+            {
+                URLshown = false;
+                grade_that_time = UNCLICKED_CLASS;
+            }
+            else
+            {
+                URLshown = true;
+                grade_that_time = local_user_queries.queryMetadata[actual_qid].urlLastGrade[urlid];
+            }
+        }
 	}
 	else
 	{
-		//checkedQueries = 0;
-		for(it = user_queries[uid].queries.begin(); it != user_queries[uid].queries.end(); ++it)
-		{
-		    /*
-			checkedQueries++;
-			if(checkedQueries == 11)
-				break;
-            */
-			matchThisQuery = *it;
-			count = 0;
-			q1_has_term.clear();
-			for(unsigned int i = 0; i < queryTerms[matchThisQuery].size(); ++i)
-			{
-				q1_has_term[queryTerms[matchThisQuery][i]] = true;
-			}
-			for(unsigned int i = 0; i < queryTerms[actual_qid].size(); ++i)
-			{
-				if(q1_has_term[queryTerms[actual_qid][i]])
-				{
-					count++;
-				}
-			}
-			if(count >= SIMILAR_INDEX_THRESH_FOR_QUERY * queryTerms[actual_qid].size())
-			{
-				// matchThisQuery has qualified
-				time_or_day = user_queries[uid].queryMetadata[matchThisQuery].last_time_day;
-				if(user_queries[uid].queryMetadata[matchThisQuery].urlLastGrade.find(urlid) != user_queries[uid].queryMetadata[matchThisQuery].urlLastGrade.end())
-				{
-					URLshown = true;
-					grade_that_time = user_queries[uid].queryMetadata[matchThisQuery].urlLastGrade[urlid];
-				}
-				else
-				{
-					URLshown = false;
-					grade_that_time = 0;
-				}
-				return true;
-			}
-		}
+        if(user_queries[uid].queryMetadata.find(actual_qid) == user_queries[uid].queryMetadata.end())
+        {
+            time_or_day = 0;
+            URLshown = false;
+            grade_that_time = UNCLICKED_CLASS;
+            return false;
+        }
+        else
+        {
+            time_or_day = user_queries[uid].queryMetadata[actual_qid].last_time_day;
+            if(user_queries[uid].queryMetadata[actual_qid].urlLastGrade.find(urlid) == user_queries[uid].queryMetadata[actual_qid].urlLastGrade.end())
+            {
+                URLshown = false;
+                grade_that_time = UNCLICKED_CLASS;
+            }
+            else
+            {
+                URLshown = true;
+                grade_that_time = user_queries[uid].queryMetadata[actual_qid].urlLastGrade[urlid];
+            }
+        }
 		return false;
 	}
 }
