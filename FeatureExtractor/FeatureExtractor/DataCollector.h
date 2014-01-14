@@ -1,10 +1,12 @@
 #ifndef DATACOLLECTOR_H_INCLUDED
 #define DATACOLLECTOR_H_INCLUDED
 
-#include "variables.h"
+#include <string.h>
 #include <sstream>
+
 #include "FileLogger.h"
-//#include <map>
+#include "Processor.h"
+#include "variables.h"
 
 using namespace std;
 
@@ -14,6 +16,8 @@ class DataCollector{
 	unsigned long long buffSize;
 	FILE* fp;
 
+	userData* RecordOfUser;
+
 	/***** Temp globals *****/
 	int nRead;
 	string rowInLog;
@@ -21,18 +25,19 @@ class DataCollector{
 	int index_q;
 
 	//temp vars
+	int prev_uid, index_session;
 	int temp_sid, temp_day, temp_time, temp_uid, temp_serp, temp_qid, temp_term, temp_url, temp_domain;
 	string temp_typeOrTime, temp_list, temp_s_term, temp_s_URLDomain, temp_s_URLID;
-	
+
 	bool considerUser;
 	/************************/
-	
-//	FileLogger* duLogger, *suLogger;
+
 	void processOneFile(int test_1_train_0);
 public:
-	DataCollector(); 
+	DataCollector();
 	void parse(int test_1_train_0);
 	void wrapUp();
+	void collectTestUserList();
 };
 
 #endif

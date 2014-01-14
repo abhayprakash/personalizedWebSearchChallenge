@@ -17,7 +17,8 @@ extern char QUERY_TERM_FILE[256];
 extern char RESULT_VALIDATE_FILE[256];
 extern char RESULT_MAPPER_FILE[256];
 
-#define MB_OR_GB 1ull
+#define MB_OR_GB 1024ull
+#define NUM_FILES 10
 
 // memory allocation
 extern unsigned long long BUFF_SIZE_INPUT_READ;
@@ -40,6 +41,7 @@ extern unsigned long long BUFF_SIZE_VALIDATE_RESULT;
 #define MAX_ROW_2_TERMS 28
 #define MAX_ROW_MORE_THAN_20_TERMS 192
 #define MAX_ROW_AROUND_10_TERMS 40
+#define NUM_OF_CORES 8
 
 // mutual communication
 #define PARSE_TRAIN_FILE 0
@@ -50,7 +52,7 @@ extern unsigned long long BUFF_SIZE_VALIDATE_RESULT;
 // Computation parameters
 #define SIMILAR_INDEX_THRESH_FOR_QUERY 0.75
 #define UNCLICKED_CLASS -1 // make one submission with this value = 0 also
-#define RAND_SEED 25 // or make if time(0), kept it constant to make results reproducible 
+#define RAND_SEED 25 // or make if time(0), kept it constant to make results reproducible
 #define PROB_KEEP_UNCLICKED_URL 5
 
 #endif // VARIABLES_H_INCLUDED

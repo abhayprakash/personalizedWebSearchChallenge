@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "usr_url.h"
 
 void usr_url::updateTable_Shown(int uid, int urlid, int day)
@@ -60,7 +59,7 @@ bool usr_url::existsBeforeSession(int uid, int urlid)
 }
 
 // for below functions assumed that entry : table[uid][urlid] exists
-// so before using them check exists(...) 
+// so before using them check exists(...)
 int usr_url::getCountShown(int uid, int urlid)
 {
 	return table[uid][urlid].count_shown + local[urlid].count_shown;
