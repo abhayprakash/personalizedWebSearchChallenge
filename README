@@ -1,5 +1,5 @@
-This repository contains the codes used in the Yandex personalized web search challenge.
+This repository contains the codes used in the Yandex personalized web search challenge. 
+Raw log containing query and click data of users spanning for 27 days and similar data for current session for the next 3 days were given using which personalization of search results was to be done - more specifically re-ranking of the 10 URLs shown to the user. More can be found at https://www.kaggle.com/c/yandex-personalized-web-search-challenge/
 
--> FeatureExtractor is the code to parse the given files, compute the features and 
-prepare output files. Bulk read and write has been used.
--> DBPopulator is the code to parse the given files(one of them being 16 GB) and make a DB from it.
+-> FeatureExtractor is the code to parse the given raw data in log(16 GB), compute the features and prepare output files.
+-> DBPopulator is the code to parse the given files and make a DB from it. It was essential for low memory machine(at least for feature extraction). Though with 64 Gb machine, it was not used.
