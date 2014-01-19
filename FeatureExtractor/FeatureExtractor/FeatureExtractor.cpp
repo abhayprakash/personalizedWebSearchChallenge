@@ -26,12 +26,14 @@ serp_id, url_id // iterate over map serpURLs to print all it
 #include "usr_url.h"
 #include "usr_qry.h"
 #include "FileLogger.h"
+#include <time.h>
 
 using namespace std;
 
 int main()
 {
-	printf("Starting (17 files) :)\n");
+    time_t start_time = time(NULL);
+	printf("Starting\n");
 	DataCollector dc;
 
 	dc.collectTestUserList();
@@ -42,9 +44,11 @@ int main()
 	dc.wrapUp();
 
     // we already have it
+	/*
 	printf("qt logging\n");
 	FileLogger qtLogger(QUERY_TERM_FILE, BUFF_SIZE_QT_FILE, MAX_ROW_2_TERMS);
 	qtLogger.logQT_All(queryTerms);
-
-	printf("Complete :)\n");
+    //qtLogger.wrapUp();
+    */
+	printf("Complete, approx. time = %d\n", time(NULL) - start_time);
 }
