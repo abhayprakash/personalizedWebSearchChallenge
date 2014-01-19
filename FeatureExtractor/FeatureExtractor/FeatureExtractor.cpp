@@ -43,12 +43,12 @@ int main()
 	dc.parse(PARSE_TEST_FILE);
 	dc.wrapUp();
 
+/*
     // we already have it
-	/*
 	printf("qt logging\n");
 	FileLogger qtLogger(QUERY_TERM_FILE, BUFF_SIZE_QT_FILE, MAX_ROW_2_TERMS);
 	qtLogger.logQT_All(queryTerms);
-    //qtLogger.wrapUp();
-    */
+    qtLogger.wrapUp();
+*/
 	printf("Complete, approx. time = %d\n", time(NULL) - start_time);
 }
