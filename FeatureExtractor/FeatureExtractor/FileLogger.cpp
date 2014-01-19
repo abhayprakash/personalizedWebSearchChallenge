@@ -98,10 +98,14 @@ void FileLogger::logVR(int actualResult) // to implement
 
 void FileLogger::wrapUp()
 {
-	fwrite(buffer, bytesUsedInBuffer, 1, fp);
-	fclose(fp);
-	free(buffer);
-	printf("feature file %s generation : Complete\n", tempPath);
+    if(fp)
+    {
+        fwrite(buffer, bytesUsedInBuffer, 1, fp);
+        fclose(fp);
+        fp = NULL;
+        free(buffer);
+        printf("feature file %s generation : Complete\n", tempPath);
+    }
 }
 
 FileLogger::~FileLogger()
