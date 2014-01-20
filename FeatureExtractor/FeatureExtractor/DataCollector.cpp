@@ -106,7 +106,7 @@ void DataCollector::processOneFile(int test_1_train_0)
 				if(considerUser)
 				{
 					index_q = RecordOfUser->session[index_session].queries.size();
-					RecordOfUser->session[index_session].queries.push_back(queryRec(temp_qid, temp_time, g_serpid));
+					RecordOfUser->session[index_session].queries.push_back(queryRec(temp_qid, temp_time, g_serpid, temp_serp));
 				}
 				sin>>temp_list;
 				istringstream tokenStream(temp_list);

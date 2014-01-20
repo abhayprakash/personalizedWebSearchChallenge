@@ -61,14 +61,14 @@ void FileLogger::logDU(int did, int urlid)
 
 void FileLogger::logTrain(rowToLog &rowLog)
 {
-	bytesUsedInBuffer += _snprintf( buffer + bytesUsedInBuffer, sizeOfRow, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", rowLog.user_id, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists, rowLog.url_sameSession.time_diff, rowLog.url_sameSession.grade, rowLog.url_beforeSession.exists, rowLog.url_beforeSession.time_diff, rowLog.url_beforeSession.grade, rowLog.query_sameSession.exists, rowLog.query_sameSession.time_diff, rowLog.query_sameSession.u_exists_for_q, rowLog.query_sameSession.grade, rowLog.query_beforeSession.exists, rowLog.query_beforeSession.time_diff, rowLog.query_beforeSession.u_exists_for_q, rowLog.query_beforeSession.grade, rowLog.resultGrade);
+	bytesUsedInBuffer += _snprintf( buffer + bytesUsedInBuffer, sizeOfRow, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", rowLog.sid, rowLog.serpid, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists + 1, rowLog.url_sameSession.time_diff + 1, rowLog.url_sameSession.grade + 1, rowLog.url_beforeSession.exists + 1, rowLog.url_beforeSession.time_diff + 1, rowLog.url_beforeSession.grade + 1, rowLog.query_sameSession.exists + 1, rowLog.query_sameSession.time_diff + 1, rowLog.query_sameSession.u_exists_for_q + 1, rowLog.query_sameSession.grade + 1, rowLog.query_beforeSession.exists + 1, rowLog.query_beforeSession.time_diff + 1, rowLog.query_beforeSession.u_exists_for_q + 1, rowLog.query_beforeSession.grade + 1, rowLog.resultGrade + 1);
 
 	checkAndFlush(bytesUsedInBuffer);
 }
 
 void FileLogger::logTest(rowToLog &rowLog)
 {
-	bytesUsedInBuffer += _snprintf( buffer + bytesUsedInBuffer, sizeOfRow, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", rowLog.user_id, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists, rowLog.url_sameSession.time_diff, rowLog.url_sameSession.grade, rowLog.url_beforeSession.exists, rowLog.url_beforeSession.time_diff, rowLog.url_beforeSession.grade, rowLog.query_sameSession.exists, rowLog.query_sameSession.time_diff, rowLog.query_sameSession.u_exists_for_q, rowLog.query_sameSession.grade, rowLog.query_beforeSession.exists, rowLog.query_beforeSession.time_diff, rowLog.query_beforeSession.u_exists_for_q, rowLog.query_beforeSession.grade);
+	bytesUsedInBuffer += _snprintf( buffer + bytesUsedInBuffer, sizeOfRow, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n", rowLog.sid, rowLog.serpid, rowLog.query_id, rowLog.url_id, rowLog.count_earlier_shown, rowLog.count_earlier_2, rowLog.count_earlier_1, rowLog.count_earlier_0, rowLog.url_position, rowLog.url_sameSession.exists + 1, rowLog.url_sameSession.time_diff + 1, rowLog.url_sameSession.grade + 1, rowLog.url_beforeSession.exists + 1, rowLog.url_beforeSession.time_diff + 1, rowLog.url_beforeSession.grade + 1, rowLog.query_sameSession.exists + 1, rowLog.query_sameSession.time_diff + 1, rowLog.query_sameSession.u_exists_for_q + 1, rowLog.query_sameSession.grade + 1, rowLog.query_beforeSession.exists + 1, rowLog.query_beforeSession.time_diff + 1, rowLog.query_beforeSession.u_exists_for_q + 1, rowLog.query_beforeSession.grade + 1);
 
 	checkAndFlush(bytesUsedInBuffer);
 }
@@ -98,14 +98,14 @@ void FileLogger::logVR(int actualResult) // to implement
 
 void FileLogger::wrapUp()
 {
-    if(fp)
-    {
-        fwrite(buffer, bytesUsedInBuffer, 1, fp);
-        fclose(fp);
-        fp = NULL;
-        free(buffer);
-        printf("feature file %s generation : Complete\n", tempPath);
-    }
+	if(fp)
+	{
+		fwrite(buffer, bytesUsedInBuffer, 1, fp);
+		fclose(fp);
+		fp = NULL;
+		free(buffer);
+		printf("feature file %s generation : Complete\n", tempPath);
+	}
 }
 
 FileLogger::~FileLogger()

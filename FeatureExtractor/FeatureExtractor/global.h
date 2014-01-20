@@ -29,18 +29,18 @@ extern usr_qry store_usrQry;
 
 // Data Collected in memory : RecordOfDay[]
 struct shownURL{
-	int url_id, timeOfClick, position;
+	int url_id, timeOfClick, position, serpId;
 	shownURL(int u, int t, int p)
 	{
 		url_id = u; timeOfClick = t; position = p;
 	}
 };
 struct queryRec{
-	int qid, timeOfQuery, shownSERP;
+	int qid, timeOfQuery, shownSERP, localSerp;
 	vector<shownURL> clickedURL;
-	queryRec(int q, int time, int gSerp)
+	queryRec(int q, int time, int gSerp, int serp)
 	{
-		qid = q; timeOfQuery = time; shownSERP = gSerp;
+		qid = q; timeOfQuery = time; shownSERP = gSerp; localSerp = serp;
 	}
 };
 struct sessMetaData{
@@ -75,7 +75,8 @@ struct feature{
 
 // to log
 struct rowToLog{
-	int user_id, query_id, url_id, count_earlier_shown, count_earlier_2, count_earlier_1, count_earlier_0, url_position;
+    int serpid;
+	int user_id, sid, query_id, url_id, count_earlier_shown, count_earlier_2, count_earlier_1, count_earlier_0, url_position;
 	feature url_sameSession, url_beforeSession, query_sameSession, query_beforeSession;
 	int resultGrade;
 };

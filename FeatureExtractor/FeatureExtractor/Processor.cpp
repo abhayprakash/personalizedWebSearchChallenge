@@ -213,11 +213,13 @@ void Processor::processTrain(userData* RecordOfUser)
 	// iteration over sessions
 	for(vector<sessMetaData>::iterator it_session = RecordOfUser->session.begin(); it_session != RecordOfUser->session.end(); ++it_session)
 	{
+	    //logRow.user_id = RecordOfUser->sessionId; // just for saving time this dirty way - userid is actually sessionId
 	    //printf("session %d\n", it_session->sessionId);
 	    //printf("day %d\n", it_session->day);
 		//iteration over queries in a session
 		for(vector<queryRec>::iterator it_query = it_session->queries.begin(); it_query != it_session->queries.end(); ++it_query)
 		{
+		    logRow.serpid = it_query->localSerp;
 		    if(it_query->clickedURL.size() == 0) // put this condition after debugging
                 continue;
 
@@ -244,7 +246,9 @@ void Processor::processTrain(userData* RecordOfUser)
 
 				// log and mark logged
 				url_logged[logRow.url_id] = true;
+				logRow.sid = it_session->sessionId;
 				logger_feature_train->logTrain(logRow);
+
 
 				// update local
 				updateLocal(logRow, it_query->timeOfQuery);
@@ -273,6 +277,7 @@ void Processor::processTrain(userData* RecordOfUser)
 					getQueryRelatedFeatures(logRow, it_session->day, it_query->timeOfQuery);
 
 					// log this url un train
+					logRow.sid = it_session->sessionId;
 					logger_feature_train->logTrain(logRow);
 				}
 
@@ -306,7 +311,8 @@ void Processor::processTest(userData* RecordOfUser)
 		//iterate over queries in a session
 		for(vector<queryRec>::iterator it_query = it_session->queries.begin(); it_query != it_session->queries.end(); ++it_query)
 		{
-			logRow.query_id = it_query->qid;
+		    logRow.serpid = it_query->localSerp;
+		    logRow.query_id = it_query->qid;
 			if(it_query+1 == it_session->queries.end()) // last query -> test
 			{
 				// iterate over all 10 urls in T query
@@ -323,6 +329,7 @@ void Processor::processTest(userData* RecordOfUser)
 					getQueryRelatedFeatures(logRow, it_session->day, it_query->timeOfQuery);
 
 					// log row in test file
+					logRow.sid = it_session->sessionId;
 					logger_feature_test->logTest(logRow);
 
 					result_Row.rowNum = rowsLoggedInTest;
