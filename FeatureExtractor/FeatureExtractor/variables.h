@@ -18,7 +18,7 @@ extern char RESULT_VALIDATE_FILE[256];
 extern char RESULT_MAPPER_FILE[256];
 
 #define MB_OR_GB 1024ull
-#define NUM_FILES 10
+#define NUM_FILES 17
 
 // memory allocation
 extern unsigned long long BUFF_SIZE_INPUT_READ;
@@ -39,7 +39,7 @@ extern unsigned long long BUFF_SIZE_VALIDATE_RESULT;
 // Upper limits
 #define MAX_ROW_CLASS_TERM 4
 #define MAX_ROW_2_TERMS 28
-#define MAX_ROW_MORE_THAN_20_TERMS 192
+#define MAX_ROW_MORE_THAN_20_TERMS 212
 #define MAX_ROW_AROUND_10_TERMS 40
 #define NUM_OF_CORES 8
 
