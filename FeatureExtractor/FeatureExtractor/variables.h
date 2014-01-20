@@ -18,7 +18,7 @@ extern char RESULT_VALIDATE_FILE[256];
 extern char RESULT_MAPPER_FILE[256];
 
 #define MB_OR_GB 1024ull
-#define NUM_FILES 17
+#define NUM_FILES 1
 
 // memory allocation
 extern unsigned long long BUFF_SIZE_INPUT_READ;

@@ -33,14 +33,14 @@ using namespace std;
 int main()
 {
     time_t start_time = time(NULL);
-	printf("Starting\n");
+	printf("Starting sequential\n");
 	DataCollector dc;
 
 	dc.collectTestUserList();
 	printf("parsing train file\n");
 	dc.parse(PARSE_TRAIN_FILE);
-	printf("parsing test file\n");
-	dc.parse(PARSE_TEST_FILE);
+	//printf("parsing test file\n");
+	//dc.parse(PARSE_TEST_FILE);
 	dc.wrapUp();
 
 /*
